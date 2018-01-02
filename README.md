@@ -62,8 +62,8 @@ The above will return the first 10 records, but only the name and email columns,
 their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
 contain three components, separated by `:`.
 
-* __type__ - Type of column.
-* __operand__ - Operand to use for your clause.
+* __type__ - Type of column. Can be `string`, `date`, `bool`, etc.
+* __operand__ - Operand to use for your clause. Can be `like`, `=`, `>=`, etc.
 * __value__ - Value to compare against.
 
 If you'd like to retrieve only items which have a name containing the string `%hansen%` for instance, you can accomplish
