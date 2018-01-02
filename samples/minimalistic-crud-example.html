@@ -5,15 +5,34 @@
   </head>
   <body>
     <h1>CRUD example</h1>
-    <ul id="foo"></ul>
+    <ul id="names"></ul>
+    <button onclick="insert();return false;">Insert</button>
     <script>
+
+/*
+ * Function that populates "ul" element above, with the ten first records
+ * from your database.
+ */
 function get_data () {
+
+  /*
+   * Retrieves our above "ul" element, and creates an XHR object, to retrieve JSON
+   * data from the server.
+   */
+  var ul = document.getElementById ('names');
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/hyper-core/database/camphora/foo/select', true);
+
+  /*
+   * Retrieving first 10 items from our database, making sure we order them ascendingly.
+   */
+  xhr.open('GET', '/hyper-core/database/camphora/foo/select?[columns]=id,name&[order-by]=name&[order-dir]=asc', true);
+
+  /*
+   * Creating a "onfinished" callback for our XHR object.
+   */
   xhr.onreadystatechange = function() {
-  if (xhr.readyState === 4) {
+    if (xhr.readyState === 4) {
       eval("window.res = " + xhr.responseText);
-      var ul = document.getElementById ('foo');
       for (idx in res) {
         var el = document.createElement('li');
         el.innerHTML = res [idx].name;
@@ -23,7 +42,45 @@ function get_data () {
   };
   xhr.send();
 }
+
+/*
+ * Populates "ul" element above, using our HTTP REST "select" wrapper function created above.
+ */
 get_data();
+
+
+/*
+ * Asks user to provide a name, and invokes our server side HTTP REST database "insert" method.
+ */
+function insert () {
+
+  /*
+   * Asks user to provide us with a name.
+   */
+  var name = prompt('Enter some name', 'John Doe');
+
+  /*
+   * Creates our XHR object, which will invoke our "insert" method on the server side.
+   */
+  var xhr = new XMLHttpRequest();
+
+  /*
+   * Invoking our "insert" method, notice contrary to our "select" method, our
+   * "insert" method requires us to use the HTTP POST verb.
+   */
+  xhr.open('POST', '/hyper-core/database/camphora/foo/insert', true);
+
+  /*
+   * Creating a "onfinished" callback for our XHR object.
+   */
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      eval("window.res = " + xhr.responseText);
+      alert(window.res + ' items was successfully inserted into your database');
+    }
+  };
+  xhr.send();
+}
     </script>
   </body>
 </html>

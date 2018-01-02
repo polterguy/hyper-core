@@ -1,7 +1,20 @@
-
 /*
  * File responsible for selecting items from our database.
  * Expects [database] and [table] as arguments.
+ *
+ * It also expects the HTTP method to be of type 'GET', and can can any
+ * additional arguments as HTTP GET QUERY paramaters, which will further refine
+ * your MySQL select query.
+ *
+ * Most notably '[order-by]' and '[order-dir]', which orders your select, in addition
+ * to '[limit]' and '[offset]', which becomes a limit and offset MySQL argument to
+ * your query.
+ *
+ * All other HTTP GET QUERY parameters becomes a part of the additional "where" clause,
+ * with their names being the column name, and their value should be in the form of
+ * "type:operand:value", where type can be e.g. "string", operand can be e.g. "like" or
+ * ">=" etc, and value can be e.g. "%foo%" or "2018-01-01T13:34" - The latter which is
+ * a "date" value.
  */
 
 
@@ -23,9 +36,32 @@ p5.mysql.connect:[{0}]
   /*
    * Our actual SQL, which is further parametrised, according to arguments given by client, 
    * as HTTP GET QUERY parameters.
+   *
+   * First retrieving our columns, making sure we guard against SQL insertion attacks.
+   */
+  .defaults
+    [columns]:*
+  p5.web.query.get:[columns]
+  .cols:
+  split:x:(/@p5.web.query.get/*|/@.defaults/*)/$?value
+    =:,
+  for-each:x:/@split/*?name
+    replace:x:/@_dp?value
+      src:`
+      dest:\`
+    set:x:/@.cols?value
+      src:{0}, `{1}`
+        :x:/@.cols?value
+        :x:/@_dp?value
+  trim-left:x:/@.cols?value
+    chars:,
+
+  /*
+   * Now we know which columns client requests, and the table name.
    */
   eval-x:x:/+
-  .sql:select * from `{0}`
+  .sql:select {0} from `{1}`
+    :x:/@trim-left?value
     :x:/../*/table?value
 
   /*
@@ -39,15 +75,18 @@ p5.mysql.connect:[{0}]
       /*
        * Ignoring "offset" and "limit" since they're handled especially further down.
        */
-      case:offset
-      case:limit
-      case:order-by
-      case:order-dir
+      case:[columns]
+      case:[offset]
+      case:[limit]
+      case:[order-by]
+      case:[order-dir]
         continue
       default
 
         /*
-         * Appending either "where" or "and" to our SQL.
+         * Appending either "where" or "and" to our SQL, depending upon whether or
+         * not this our first [for-each] iteration, implying the first parameter we
+         * add to our SQL.
          */
         if:x:/@.no?value
           =:int:0
@@ -60,46 +99,99 @@ p5.mysql.connect:[{0}]
               :x:/@.sql?value
 
         /*
-         * Retrieving value of our QUERY parameter, and handling it according to its name.
-         * This is done to handle "id" QUERY parameters as LONG values, requiring an exact match.
-         *
-         * Notice, if your database has a different name for its ID column (or different type), you
-         * might want to change the logic inside of the [if]lambda block here.
+         * Retrieving type, value and operand of our QUERY parameter, and handling it accordingly.
          */
         p5.web.query.get:x:/@_dp?value
-        if:x:/@_dp?value
-          =:id
 
-          /*
-           * Special logic for "id" QUERY parameter.
-           */
-          set:x:/@.sql?value
-            src:{0} `{1}` = @NO{2}
-              :x:/@.sql?value
-              :x:/@_dp?value
-              :x:/@.no?value
-          add:x:/..p5.mysql.connect/*/p5.mysql.select
-            src:@"@NO{0}:long:@""{1}"""
-              :x:/@.no?value
-              :x:/@p5.web.query.get/*?value
+        /*
+         * Splitting query value to get "type", "operand", and "value".
+         */
+        split:x:/@_dp?value
+          =:":"
 
-        else
+        /*
+         * Retrieving our "type" and "operand", and removing them from the above
+         * [split] results afterwards.
+         */
+        eval-x:x:/+
+        .type:x:/@split/0?name
+        eval-x:x:/+
+        .operand:x:/@split/1?name
+        set:x:/@split(/0|/1)
 
-          /*
-           * Generic "like" comparison.
-           */
-          replace:x:/@_dp?value
-            src:`
-            dest:\`
-          set:x:/@.sql?value
-            src:{0} `{1}` like @NO{2}
-              :x:/@.sql?value
-              :x:/@replace?value
-              :x:/@.no?value
-          add:x:/..p5.mysql.connect/*/p5.mysql.select
-            src:@"@NO{0}:@""{1}"""
-              :x:/@.no?value
-              :x:/@p5.web.query.get/*?value
+        /*
+         * In case "value" parts contains a ":", there will more than one
+         * remaining item in above [split] result now, at which point we'll
+         * need to join them with ":" being our [sep] character.
+         */
+        join:x:/@split/*?name
+          sep:":"
+
+        /*
+         * Sanity checking "type", by making sure it's a type that
+         * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
+         *
+         * TODO: Check up that we add all types that MySQL supports.
+         */
+        switch:x:/@.type?value
+          case:bool
+          case:int
+          case:long
+          case:date
+          case:string
+          case:decimal
+            // Need to have some node in this lambda, to prevent fall through to our default.
+            .foo
+          default
+            throw:Type {0} is not supported
+              :x:/@.type?value
+
+        /*
+         * Sanity checking "operand", by making sure it's an operand that
+         * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
+         *
+         * TODO: Check up that we add all operands that MySQL supports.
+         */
+        switch:x:/@.type?value
+          case:=
+          case:!=
+          case:like
+          case:>
+          case:<
+          case:>=
+          case:<=
+            // Need to have some node in this lambda, to prevent fall through to our default.
+            .foo
+          default
+            throw:Operand {0} is not supported
+              :x:/@.operand?value
+
+        /*
+         * Making sure we prevent from SQL insertion attack in "column name" parts.
+         */
+        replace:x:/@_dp?value
+          src:`
+          dest:\`
+
+        /*
+         * Dynamically building SQL accordingly.
+         */
+        set:x:/@.sql?value
+          src:{0} `{1}` {2} @NO{2}
+            :x:/@.sql?value
+            :x:/@replace?value
+            :x:/@.operand?value
+            :x:/@.no?value
+
+        /*
+         * Adding SQL parameter to [p5.mysql.select] invocation.
+         */
+        set:x:/+/*/*?name
+          src:@NO{0}
+            :x:/@.no?value
+        add:x:/..p5.mysql.connect/*/p5.mysql.select
+          src
+            foo:x:/@p5.web.query.get/*?value
 
         /*
          * Increamenting "counter" which dynamically creates our SQL parameters.
@@ -115,31 +207,39 @@ p5.mysql.connect:[{0}]
    * large selects.
    */
   .defaults
-    order-dir:ASC
-    offset:long:0
-    limit:long:10
-  p5.web.query.get:order-by
-  p5.web.query.get:order-dir
-  p5.web.query.get:limit
-  p5.web.query.get:offset
+    [order-dir]:asc
+    [limit]:long:10
+    [offset]:long:0
+  p5.web.query.get:[order-by]
+  p5.web.query.get:[order-dir]
+  p5.web.query.get:[limit]
+  p5.web.query.get:[offset]
 
   /*
    * Checking if client supplied an "order by" QUERY parameter.
    */
-  if:x:/..p5.mysql.connect/*/p5.web.query.get/[0,1]/*/order-by?value
-    if:x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+  if:x:/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*?value
+
+    /*
+     * Sanity checking direction for "order by" parts.
+     */
+    if:x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*|/@.defaults/0)/$?value
       !=:asc
-      and:x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+      and:x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*|/@.defaults/0)/$?value
         !=:desc
-      throw:Only provide 'asc' or 'desc' as 'order-dir' query parameter.
-    replace:x:/..p5.mysql.connect/*/p5.web.query.get/[0,1]/*/order-by?value
+      throw:Only provide 'asc' or 'desc' as '[order-dir]' query parameter.
+
+    /*
+     * Making sure we guard against SQL insertion attacks in "order by" parameter.
+     */
+    replace:x:/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*?value
       src:`
       dest:\`
     set:x:/@.sql?value
       src:{0} order by `{1}` {2}
         :x:/@.sql?value
         :x:/@replace?value
-        :x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+        :x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*|/@.defaults/0)/$?value
 
   /*
    * Adding tail (limit and offset).
@@ -152,8 +252,8 @@ p5.mysql.connect:[{0}]
    * Executing actual SQL, now that we have parametrised it, and returning results to client as JSON.
    */
   p5.mysql.select:x:/@.sql?value
-    @limit:x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*/limit|/@.defaults/*/limit)/$?value.long
-    @offset:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*/offset|/@.defaults/*/offset)/$?value.long
+    @limit:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*|/@.defaults/1)/$?value.long
+    @offset:x:(/..p5.mysql.connect/*/p5.web.query.get/[4,5]/*|/@.defaults/2)/$?value.long
 
   /*
    * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
