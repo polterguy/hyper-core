@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A CRUD database example!</title>
+  </head>
+  <body>
+    <h1>CRUD example</h1>
+    <ul id="foo"></ul>
+    <script>
+function get_data () {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/hyper-core/database/camphora/foo/select', true);
+  xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+      eval("window.res = " + xhr.responseText);
+      var ul = document.getElementById ('foo');
+      for (idx in res) {
+        var el = document.createElement('li');
+        el.innerHTML = res [idx].name;
+        ul.appendChild(el);
+      }
+    }
+  };
+  xhr.send();
+}
+get_data();
+    </script>
+  </body>
+</html>
