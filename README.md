@@ -60,7 +60,7 @@ from your `my-cool-database` and its `customers` table, you can accomplish that 
 
 The above will return the first 10 records, but only the name and email columns, and sort your results descending by
 their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
-contain three components.
+contain three components, separated by `:`.
 
 * __type__ - Type of column.
 * __operand__ - Operand to use for your clause.
@@ -70,7 +70,8 @@ If you'd like to retrieve only items which have a name containing the string `%h
 that with the following URL.
 
 ```
-/hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%```
+/hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%
+```
 
 Remember to URL encode your URL though.
 
