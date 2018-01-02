@@ -1,0 +1,41 @@
+
+/*
+ * Main URL resolver for Hyper Core.
+ *
+ * First we split the given [url] into it its main components,
+ * such that we can "outsource" further resolving, to whatever resolver this
+ * particular URL was referring to.
+ */
+split:x:/../*/url?value
+  =:/
+
+
+/*
+ * This will contain the main "sub-module" name, for which resolver we should further
+ * outsource this particular "action" to.
+ */
+eval-x:x:/+
+.operation:x:/@split/1?name
+
+
+/*
+ * Removing the main two components from our URL, as we pass it onwards further into our
+ * specific URL resolver.
+ */
+set:x:/@split(/0|/1)
+join:x:/@split/*?name
+  sep:/
+
+
+/*
+ * Forward evaluating the [url] argument to our resolver, before we invoke the specific resolver
+ * for the current operation.
+ *
+ * Notice, at this point, the two main components of our [url] has been removed, the first one being
+ * the folder for Hyper Core ("/hyper-core/" that is), and the second being the 
+ * subfolder (e.g. "/database/") that is.
+ */
+eval-x:x:/+/*/url
+micro.evaluate.file:@HYPER-CORE/{0}/evaluate.hl
+  :x:/@.operation?value
+  url:x:/@join?value

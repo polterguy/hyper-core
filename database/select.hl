@@ -1,0 +1,192 @@
+
+/*
+ * File responsible for selecting items from our database.
+ * Expects [database] and [table] as arguments.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  database:string
+  table:string
+
+
+/*
+ * Opening up our database connection, and evaluating our SELECT SQL statement, echoing the results
+ * to the client as JSON.
+ */
+p5.mysql.connect:[{0}]
+  :x:/../*/database?value
+
+  /*
+   * Our actual SQL, which is further parametrised, according to arguments given by client, 
+   * as HTTP GET QUERY parameters.
+   */
+  eval-x:x:/+
+  .sql:select * from `{0}`
+    :x:/../*/table?value
+
+  /*
+   * Further parametrising our SQL according to GET QUERY parameters supplied by client.
+   */
+  .no:int:0
+  p5.web.query.list
+  for-each:x:/@p5.web.query.list/*?name
+    switch:x:/@_dp?value
+
+      /*
+       * Ignoring "offset" and "limit" since they're handled especially further down.
+       */
+      case:offset
+      case:limit
+      case:order-by
+      case:order-dir
+        continue
+      default
+
+        /*
+         * Appending either "where" or "and" to our SQL.
+         */
+        if:x:/@.no?value
+          =:int:0
+          set:x:/@.sql?value
+            src:{0} where
+              :x:/@.sql?value
+        else
+          set:x:/@.sql?value
+            src:{0} and
+              :x:/@.sql?value
+
+        /*
+         * Retrieving value of our QUERY parameter, and handling it according to its name.
+         * This is done to handle "id" QUERY parameters as LONG values, requiring an exact match.
+         *
+         * Notice, if your database has a different name for its ID column (or different type), you
+         * might want to change the logic inside of the [if]lambda block here.
+         */
+        p5.web.query.get:x:/@_dp?value
+        if:x:/@_dp?value
+          =:id
+
+          /*
+           * Special logic for "id" QUERY parameter.
+           */
+          set:x:/@.sql?value
+            src:{0} `{1}` = @NO{2}
+              :x:/@.sql?value
+              :x:/@_dp?value
+              :x:/@.no?value
+          add:x:/..p5.mysql.connect/*/p5.mysql.select
+            src:@"@NO{0}:long:@""{1}"""
+              :x:/@.no?value
+              :x:/@p5.web.query.get/*?value
+
+        else
+
+          /*
+           * Generic "like" comparison.
+           */
+          replace:x:/@_dp?value
+            src:`
+            dest:\`
+          set:x:/@.sql?value
+            src:{0} `{1}` like @NO{2}
+              :x:/@.sql?value
+              :x:/@replace?value
+              :x:/@.no?value
+          add:x:/..p5.mysql.connect/*/p5.mysql.select
+            src:@"@NO{0}:@""{1}"""
+              :x:/@.no?value
+              :x:/@p5.web.query.get/*?value
+
+        /*
+         * Increamenting "counter" which dynamically creates our SQL parameters.
+         */
+        set:x:/@.no?value
+          +:x:/@.no?value
+            _:1
+
+  /*
+   * Further parametrising our SQL according to "offset" and "limit" GET QUERY parameters supplied by client.
+   *
+   * Notice, we default offset to 0 and limit to 10, to avoid exhausting server resources byt making humongously
+   * large selects.
+   */
+  .defaults
+    order-dir:ASC
+    offset:long:0
+    limit:long:10
+  p5.web.query.get:order-by
+  p5.web.query.get:order-dir
+  p5.web.query.get:limit
+  p5.web.query.get:offset
+
+  /*
+   * Checking if client supplied an "order by" QUERY parameter.
+   */
+  if:x:/..p5.mysql.connect/*/p5.web.query.get/[0,1]/*/order-by?value
+    if:x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+      !=:asc
+      and:x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+        !=:desc
+      throw:Only provide 'asc' or 'desc' as 'order-dir' query parameter.
+    replace:x:/..p5.mysql.connect/*/p5.web.query.get/[0,1]/*/order-by?value
+      src:`
+      dest:\`
+    set:x:/@.sql?value
+      src:{0} order by `{1}` {2}
+        :x:/@.sql?value
+        :x:/@replace?value
+        :x:(/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*/order-dir|/@.defaults/*/order-dir)/$?value
+
+  /*
+   * Adding tail (limit and offset).
+   */
+  set:x:/@.sql?value
+    src:{0} limit @limit offset @offset
+      :x:/@.sql?value
+
+  /*
+   * Executing actual SQL, now that we have parametrised it, and returning results to client as JSON.
+   */
+  p5.mysql.select:x:/@.sql?value
+    @limit:x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*/limit|/@.defaults/*/limit)/$?value.long
+    @offset:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*/offset|/@.defaults/*/offset)/$?value.long
+
+  /*
+   * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+   * JSON results back to caller.
+   */
+  p5.web.header.set:Content-Type
+    src:application/json
+
+  /*
+   * Checking for empty results, at which point we simply return empty JSON, and return early.
+   */
+  if:x:/@p5.mysql.select/*
+    not
+    p5.web.echo:{}
+    
+
+  /*
+   * Transforming above results to JSON and returning it to caller as such.
+   *
+   * Notice, to avoid having two properties with the same name, we'll need to run through and update
+   * the [row] children of the results of our [p5.mysql.select] invocation.
+   */
+  .no:int:0
+  for-each:x:/@p5.mysql.select/*
+    set:x:/@_dp/#?name
+      src:item_{0}
+        :x:/@.no?value
+    set:x:/@.no?value
+      +:x:/@.no?value
+        _:1
+  lambda2json:x:/@p5.mysql.select/*
+
+  /*
+   * Returning JSON to caller.
+   */
+  p5.web.echo:x:/@lambda2json?value

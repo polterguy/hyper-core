@@ -1,0 +1,112 @@
+
+/*
+ * File responsible for performing updates to some specific MySQL database.
+ *
+ * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
+ * this one will require the caller to use a POST HTTP request.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  database:string
+  table:string
+
+
+/*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:POST
+  throw:This REST service requires you to use a POST HTTP method for your request.
+
+
+/*
+ * Opening up our database connection, and evaluating our UPDATE SQL statement, echoing the results
+ * to the client as JSON.
+ */
+p5.mysql.connect:[{0}]
+  :x:/../*/database?value
+
+  /*
+   * Our actual SQL, which is further parametrised, according to arguments given by client, 
+   * as HTTP GET POST parameters.
+   */
+  eval-x:x:/+
+  .sql:update `{0}`
+    :x:/../*/table?value
+
+  /*
+   * Further parametrising our SQL according to GET POST parameters supplied by client.
+   */
+  .no:int:0
+  p5.web.post.list
+  for-each:x:/@p5.web.post.list/*?name
+    switch:x:/@_dp?value
+
+      /*
+       * Ignoring "id" since it's handled especially further down.
+       */
+      case:id
+        continue
+      default
+
+        /*
+         * Appending either "set" or "," to our SQL.
+         */
+        if:x:/@.no?value
+          =:int:0
+          set:x:/@.sql?value
+            src:"{0} set "
+              :x:/@.sql?value
+        else
+          set:x:/@.sql?value
+            src:"{0}, "
+              :x:/@.sql?value
+
+        /*
+         * Retrieving value of our POST parameter.
+         */
+        p5.web.post.list:x:/@_dp?value
+        replace:x:/@_dp?value
+          src:`
+          dest:\`
+        set:x:/@.sql?value
+          src:{0} `{1}` = @NO{2}
+            :x:/@.sql?value
+            :x:/@replace?value
+            :x:/@.no?value
+        add:x:/..p5.mysql.connect/*/p5.mysql.update
+          src:@"@NO{0}:@""{1}"""
+            :x:/@.no?value
+            :x:/@p5.web.post.list/*?value
+
+        /*
+         * Increamenting "counter" which dynamically creates our SQL parameters.
+         */
+        set:x:/@.no?value
+          +:x:/@.no?value
+            _:1
+
+  /*
+   * Further parametrising our SQL according to GET POST parameters supplied by client.
+   * Now we set the "id" of record to update.
+   */
+  p5.web.post.get:id
+  if:x:/@p5.web.post.get/*?value
+    not
+    throw:No 'id' parameter supplied.
+  set:x:/@sql?value
+    src:{0} where id = @id
+
+  /*
+   * Executing actual SQL, now that we have parametrised it, and returning results of invocation to client.
+   */
+  p5.mysql.update:x:/@.sql?value
+    @id:x:/@p5.web.post.get/*?value.long
+  p5.web.echo:@"{""no"":""{0}""}"
+    :x:/@p5.mysql.update?value
+

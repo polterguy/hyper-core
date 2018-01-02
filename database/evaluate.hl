@@ -1,0 +1,40 @@
+
+/*
+ * Database resolver, with the responsibility of doing INSERT, SELECT, UPDATE and DELETE
+ * from the specified database and table.
+ *
+ * Will retrieve the database name, which is the 1st part of the URL, and the table name,
+ * which is the 2nd part of the URL, and the database operation, which is the 3rd part
+ * of the URL, and further pass onwards the operation ot the associated operation accordingly.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  url:string
+
+
+/*
+ * Splitting [url] to figure out database name, table name, and operation.
+ */
+split:x:/../*/url?value
+  =:?
+split:x:/@split/0?name
+  =:/
+.args
+  database:x:/@split/0?name
+  table:x:/@split/1?name
+  operation:x:/@split/2?name
+eval-x:x:/@.args/*
+
+
+/*
+ * Invoking specific resolver for our given database operation.
+ */
+eval-x:x:/+/*(/database|/table)
+micro.evaluate.file:@HYPER-CORE/database/{0}.hl
+  :x:/@.args/*/operation?value
+  database:x:/@.args/*/database?value
+  table:x:/@.args/*/table?value

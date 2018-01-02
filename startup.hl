@@ -1,0 +1,13 @@
+/*
+ * Startup file for module, basically creates all Active Events necessary
+ * to wire up Hyper Core.
+ */
+split:x:/..?name
+  =:/
+set:x:/@split/0/-
+join:x:/@split/*?name
+  sep:/
+eval-x:x:/+/*
+create-event:p5.io.unroll-path.@HYPER-CORE
+  return:/{0}
+    :x:/@join?value
