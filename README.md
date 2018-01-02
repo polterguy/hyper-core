@@ -14,10 +14,10 @@ dependent upon Phosphorus Five to function.
 There are four basic CRUD operations you can perform on your MySQL database. These are as 
 follows.
 
-* __[select]__ - Selects data from your MySQL database. Requires 'GET' HTTP method.
-* __[update]__ - Updates data in your database. Requires 'POST' HTTP method.
-* __[delete]__ - Deletes data from your database. Requires 'DELETE' HTTP method.
-* __[insert]__ - Inserts data into your database. Requires 'PUT' HTTP method.
+* __[select]__ - Selects data from your MySQL database. Requires `GET` method.
+* __[update]__ - Updates data in your database. Requires `POST` method.
+* __[delete]__ - Deletes data from your database. Requires `DELETE` method.
+* __[insert]__ - Inserts data into your database. Requires `PUT` method.
 
 Since each of the above operations have their own unique URL, you can use
 the integrated authentication and authorisation features of [Phosphorus Five](https://github.com/polterguy/phosphorusfive),
