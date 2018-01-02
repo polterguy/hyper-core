@@ -1,10 +1,13 @@
 # A generic REST web service
 
-Hyper Core is a generic back end for your web apps, built around REST HTTP 
-web services, allowing you to build your front end, towards a mature and secure back end, 
+Hyper Core is a generic back end for your web apps, built as a generic REST HTTP 
+web service, allowing you to build your front end, towards a mature and secure back end, 
 automatically taking care of common security issues, such as SQL insertion attacks - While
 at the same time getting to reuse pre-built generic operations, such as CRUD operations,
-towards your MySQL database.
+towards your MySQL database(s). It is a fairly new project, and should be considered BETA, 
+but contains the following main modules at the time being. Hyper Core is built is
+a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously
+dependent upon Phosphorus Five to function.
 
 ## MySQL CRUD operations
 
@@ -17,14 +20,23 @@ follows.
 * __[insert]__ - Inserts data into your database. Requires 'PUT' HTTP method.
 
 Since each of the above operations have their own unique URL, you can use
-the integrated authentication and authorisation features of Phosphorus Five,
-through for instance the Peeples module, which allows you to allow or deny
-access to URLs, according to your users' role.
+the integrated authentication and authorisation features of [Phosphorus Five](https://github.com/polterguy/phosphorusfive),
+through for instance its [Peeples](https://github.com/polterguy/peeples) module, 
+which allows you to allow or deny access to URLs, according to your users' role.
+Each of the above HTTP REST services follows the following URL format. 
 
-Each of the above HTTP REST services follows the following URL format `/hyper-core/database/[database]/[table]/[operation]`.
-If you have a database called e.g. `my-cool-database` with a table called `customers`, and you want to
-perform a `select` query towards it for instance, you can accomplish that with the following URL,
-`/hyper-core/database/my-cool-database/customers/select`.
+```
+/hyper-core/database/[database]/[table]/[operation]
+```
+
+If you have a database called e.g. `my-cool-database`, with a table called `customers`, and you want to
+perform a `select` query towards it for instance, you can accomplish that with the following URL.
+
+```
+/hyper-core/database/my-cool-database/customers/select
+```
+
+Assuming you have not changed the default installation folder of your Hyper Core module.
 Each of the four above operations, can take additional parameters, depending upon which operation
 you want to perform.
 
