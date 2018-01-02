@@ -1,0 +1,136 @@
+/*
+ * File responsible for performing inserts to some specific MySQL database.
+ *
+ * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
+ * this one will require the caller to use a PUT HTTP request.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  database:string
+  table:string
+
+
+/*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:PUT
+  throw:This REST service requires you to use a PUT HTTP method for your request.
+
+
+/*
+ * Opening up our database connection, and evaluating our INSERT SQL statement, 
+ * echoing the results to the client as JSON.
+ */
+p5.mysql.connect:[{0}]
+  :x:/../*/database?value
+
+  /*
+   * Our actual SQL, which is further parametrised, according to arguments given by client, 
+   * as HTTP GET POST parameters.
+   */
+  eval-x:x:/+
+  .sql:insert into `{0}`
+    :x:/../*/table?value
+
+  /*
+   * Further parametrising our SQL, according to parameters supplied by client.
+   */
+  .cols
+  .pars
+  .no:int:0
+
+  /*
+   * Listing all parameters supplied by client, and iterating through them all,
+   * to make sure we parametrise our SQL insert statement.
+   */
+  p5.web.post.list
+  for-each:x:/@p5.web.post.list/*?name
+
+    /*
+     * Getting value of parameter.
+     */
+    p5.web.post.get:x:/@_dp?value
+
+    /*
+     * Making sure we guard against SQL insertion attacks on the "column name" parts.
+     */
+    replace:x:/@_dp?value
+      src:`
+      dest:\`
+
+    /*
+     * Dynamically adding currently iterated column name to the parts that declares which 
+     * columns we should insert into our database.
+     */
+    set:x:/@.cols?value
+      src:{0},`{1}`
+        :x:/@.cols?value
+        :x:/@replace?value
+
+    /*
+     * Adding our SQL parameter, making sure we get a unique name (@NO0, @NO1, @NO2, etc).
+     * Also making sure we forward evaluate the value of our SQL parameter.
+     */
+    set:x:/+2/*/*?name
+      src:@NO{0}
+        :x:/@.no?value
+    eval-x:x:/+/*/*
+    add:x:/@.pars
+      src
+        foo:x:/@p5.web.post.get/*?value
+
+    /*
+     * Incrementing the integer used to create unique SQL parameter names.
+     */
+    set:x:/@.no?value
+      +:x:/@.no?value
+        _:1
+
+  /*
+   * Trimming excessive "," at the beginning of our column declaration.
+   */
+  set:x:/@.cols?value
+    trim-left:x:/@.cols?value
+      chars:,
+
+  /*
+   * Joining all SQL parameters by ",", such that we can reference them in our SQL.
+   */
+  join:x:/@.pars/*?name
+    sep:,
+
+  /*
+   * Adding our parameter collection to our insert SQL.
+   */
+  add:x:/..p5.mysql.connect/*/p5.mysql.insert
+    src:x:/@.pars/*
+
+  /*
+   * Adding column declaration and parameter declarations to our SQL.
+   */
+  set:x:/@.sql?value
+    src:{0} ({1}) values ({2})
+      :x:/@.sql?value
+      :x:/@.cols?value
+      :x:/@join?value
+
+  /*
+   * Doing our actual insert now.
+   */
+  p5.mysql.insert:x:/@.sql?value
+
+  /*
+   * Making sure we return the "id" of our inserted item, as JSON to caller,
+   * with the "id" being the database id of our inserted item.
+   */
+  p5.web.header.set:Content-Type
+    src:application/json
+  p5.web.echo:@"{{""id"":""{0}""}}"
+    :x:/@p5.mysql.insert/*/id?value
+        

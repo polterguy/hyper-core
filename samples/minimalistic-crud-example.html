@@ -25,7 +25,7 @@ function get_data () {
   /*
    * Retrieving first 10 items from our database, making sure we order them ascendingly.
    */
-  xhr.open('GET', '/hyper-core/database/camphora/foo/select?[columns]=id,name&[order-by]=name&[order-dir]=asc', true);
+  xhr.open('GET', '/hyper-core/database/camphora/foo/select', true);
 
   /*
    * Creating a "onfinished" callback for our XHR object.
@@ -68,7 +68,8 @@ function insert () {
    * Invoking our "insert" method, notice contrary to our "select" method, our
    * "insert" method requires us to use the HTTP POST verb.
    */
-  xhr.open('POST', '/hyper-core/database/camphora/foo/insert', true);
+  xhr.open('PUT', '/hyper-core/database/camphora/foo/insert', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
   /*
    * Creating a "onfinished" callback for our XHR object.
@@ -76,10 +77,11 @@ function insert () {
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       eval("window.res = " + xhr.responseText);
-      alert(window.res + ' items was successfully inserted into your database');
+      alert('Item was successfully inderted with the id of; ' + window.res.id);
     }
   };
-  xhr.send();
+  var body = 'name=' + name;
+  xhr.send(body);
 }
     </script>
   </body>

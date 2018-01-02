@@ -73,6 +73,6 @@ that with the following URL.
 /hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%
 ```
 
-Remember to URL encode your URL though.
+**Important** - Remember to URL encode your URL!
 
 
