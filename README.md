@@ -1,16 +1,16 @@
-## A generic back end for JSON/REST based front ends
+# A generic back end for JSON/REST based front ends
 
 Hyper Core is an attempt at creating a generic back end, built around JSON, allowing you to easily consume
 pre-built JSON based web services, from your own JavaScript projects. It is recently
 initiated, but contains for now, a _"database"_ module, which allows you to perform
 all basic CRUD operations, on any MySQL based database, as long as it has at the very least
-an _"id"_ primary key column.
+an _"id"_ primary id column.
 
 The idea with the project, is to create a generic back end, which will serve most
 of your purposes, by exposing parts of Phosphorus Five to JSON web services, such
 that you can focus exclusively on the front end, integrating Phosphorus Five with
 any front end framework you wish. This would allow you to create your front end in 
-anything you wish, such as for instance Sencha, Angular, React, jQuery, etc. While
+anything you wish, such as for instance Sencha, Angular, React, jQuery, etc - While
 having Phosphorus Five automatically take care of things such as security, etc.
 
 Since the module is built around URLs, and you can grant or deny access to URLs
@@ -25,12 +25,15 @@ of how to perform all CRUD operations on a database. Notice, this example requir
 that you have MySQL setup and configured correctly in your web.config, in addition
 to that you actually have some database, and some table within it. The example expects
 a database called _"p5_camphora"_, with a table named _"foo"_, and a column named _"name"_ in 
-your _"foo"_ table - In addition to an AUTO_INCREMENT column called _'id'_, which is the table's
-primary id, preferably also with some records in your _"foo"_ table - But this can easily 
+your _"foo"_ table - In addition to an _'id'_ column, serving is the primary id of your table,
+preferably also with some records in your _"foo"_ table - But this can easily 
 be changed. The easiest way to create such a table, is to use Camphora Five, and create a
 CRUD app named _"foo"_, with a _"name"_ field within it.
 
 Notice, the database needs to be prefixed with your database prefix, which is defined in
 your web.config, and may vary from installation to installation. This is the part that
 says _"p5\_"_ above, in the database name.
+
+The project is currently highly BETA, but will be a focal point forward for me, since it
+integrates very well with Hyper IDE, and its ideas in general.
 
