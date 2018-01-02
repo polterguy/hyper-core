@@ -49,24 +49,29 @@ The select operation takes the following optional parameters as HTTP GET paramet
 * __[order-dir]__ - Can be either 'asc' or 'desc', and declares whether or not you'd like to order ascending or descending. Defaults to `asc`.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`.
+* __xxx__ - Becomes additional parts of your `where` clause.
 
 All parameters are optional. If you want to select only name and email columns, and sort descending by name,
-from your _"my-cool-database"_ and its _"customers"_ table, you can accomplish that with the following URL.
+from your `my-cool-database` and its `customers` table, you can accomplish that with the following URL.
 
 ```
 /hyper-core/database/my-cool-database/customers/select?[columns]=name,email&[sort-by]=name&[sort-dir]=desc
 ```
 
-The above will return the first 10 records, but only the name and email columns.
-
-All additional parameters becomes a part of the where clause to your SQL, and must all contain three components.
+The above will return the first 10 records, but only the name and email columns, and sort your results descending by
+their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
+contain three components.
 
 * __type__ - Type of column.
 * __operand__ - Operand to use for your clause.
 * __value__ - Value to compare against.
 
 If you'd like to retrieve only items which have a name containing the string `%hansen%` for instance, you can accomplish
-that with the following URL `/hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%`. Remember
-to URL encode your URL though.
+that with the following URL.
+
+```
+/hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%```
+
+Remember to URL encode your URL though.
 
 
