@@ -27,6 +27,15 @@ micro.lambda.contract.min:x:/..
 
 
 /*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:GET
+  throw:This REST service requires you to use a GET HTTP method for your request.
+
+
+/*
  * Opening up our database connection, and evaluating our SELECT SQL statement, echoing the results
  * to the client as JSON.
  */
