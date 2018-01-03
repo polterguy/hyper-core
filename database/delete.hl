@@ -1,8 +1,7 @@
 /*
- * File responsible for performing delete on one or more record in some specific MySQL database table.
+ * File responsible for performing "delete" on one or more record in some specific MySQL database table.
  *
- * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
- * this one will require the caller to use a DELETE HTTP request.
+ * Requires you to use the HTTP DELETE verb.
  *
  * Pass in any HTTP parameters you wish, which will parametrise the delete SQL accordingly.
  * E.g. "id=5, 6, 7" to delete items with id "5", "6" and "7".
@@ -58,7 +57,7 @@ p5.mysql.connect:[{0}]
   p5.web.query.list
 
   /*
-   * Notice, contrary to someof the other verbs, the delete operation can only
+   * Notice, contrary to someof our other verbs, the delete operation can only
    * handle exactly one HTTP QUERY parameter.
    */
   if:x:/@p5.web.query.list/*?count
@@ -136,6 +135,14 @@ p5.mysql.connect:[{0}]
       set:x:/@.no?value
         +:x:/@.no?value
           _:1
+
+  /*
+   * To prevent client from deleting all items, we check that we at least
+   * had atthe minimum one parameter passed in.
+   */
+  if:x:/@.no
+    =:int:0
+    throw:The delete operation requires you to supply at least one condition
 
   /*
    * Executing actual SQL, now that we have parametrised it, and returning results to client as JSON.

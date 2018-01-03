@@ -9,8 +9,11 @@
     <button onclick="insert_item ();return false;">Insert</button>
     <script>
 
+
+
 /*
- * Function that populates "ul" element above, with the first 50 records from our database.
+ * Function that populates "ul" element above, with the first 50 records from our database,
+ * by invoking our "select" method.
  */
 function get_items () {
 
@@ -69,6 +72,14 @@ function get_items () {
         del.setAttribute ("data-value", res [idx].id);
         li.appendChild (del);
 
+        // Creating an "edit" button.
+        var edit = document.createElement('button');
+        edit.style.cssText = "margin-left:15px;";
+        edit.onclick = function (event) {edit_item (event.target.getAttribute('data-value'));return false;};
+        edit.innerHTML = 'edit';
+        edit.setAttribute ("data-value", res [idx].id);
+        li.appendChild (edit);
+
         // Appending main "li" element to "ul" element.
         ul.appendChild (li);
       }
@@ -78,6 +89,7 @@ function get_items () {
   // Invoking our HTTP REST service.
   xhr.send();
 }
+
 
 
 /*
@@ -120,7 +132,7 @@ function insert_item () {
        * Doing some basic logging and re-databinding our "ul" element again.
        */
       eval("window.res = " + xhr.responseText);
-      console.log('Item was successfully inderted with the id of; ' + window.res.id);
+      console.log('Item was successfully inserted with the id of; ' + window.res.id);
       get_items ();
     }
   };
@@ -129,6 +141,59 @@ function insert_item () {
   var body = 'name=' + name;
   xhr.send(body);
 }
+
+
+
+/*
+ * Asks user to provide a new name, and invokes our server side HTTP REST database "edit" method.
+ */
+function edit_item (id) {
+
+  /*
+   * Asks user to provide us with a name.
+   */
+  var name = prompt('Enter some new name for your item', 'John Doe');
+
+  /*
+   * Creates our XHR object, which will invoke our "insert" method on the server side.
+   */
+  var xhr = new XMLHttpRequest();
+
+  /*
+   * Invoking our "insert" method, notice contrary to our "select" method, our
+   * "insert" method requires us to use the HTTP PUT verb.
+   */
+  xhr.open('POST', '/hyper-core/database/camphora/foo/update?id=' + id, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  /*
+   * Creating an "onfinished" callback for our XHR object.
+   */
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+
+      /*
+       * Doing some basic logging and re-databinding our "ul" element again.
+       */
+      eval("window.res = " + xhr.responseText);
+      console.log('Item was successfully updated, affected records was; ' + window.res.affected_records);
+      get_items ();
+    }
+  };
+
+  // Sending our body to server.
+  var body = 'name=' + name;
+  xhr.send(body);
+}
+
 
 
 /*
@@ -174,10 +239,13 @@ function delete_item (id) {
   xhr.send();
 }
 
+
+
 /*
  * Populates "ul" element above, using our HTTP REST "select" wrapper function created above.
  */
 get_items();
+
     </script>
   </body>
 </html>
