@@ -25,11 +25,6 @@ follows.
 * __[delete]__ - Deletes data from your database. Requires `DELETE` method.
 * __[insert]__ - Inserts data into your database. Requires `PUT` method.
 
-Since each of the above operations have their own unique URL, and each database
-and table also gets its own unique virtual URL, this implies that you can use
-the integrated authentication and authorisation features of Phosphorus Five,
-through for instance its [Peeples](https://github.com/polterguy/peeples) module, 
-which allows you to allow or deny access to URLs, according to your users' role.
 Each of the above HTTP REST services follows the following URL format. 
 
 ```
