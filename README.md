@@ -113,10 +113,34 @@ you could accomplish that with the following URL.
 
 Notice, if you supply multiple additional query parameters, these will be `OR`'ed together in your select SQL.
 This means that the following would select all items having either the firstname containing _"john"_, or the surname 
-containing _"hansen"_.
+containing _"hansen"_. The `select` operation requires you to use a GET HTTP request.
 
 ```
 /hyper-core/database/camphora/customers/select?firstname=like:%john%&surname=like:%hansen%
 ```
 
+## Insert operation
+
+The insert operation is arguably simpler than the `select` operation, since it doesn't require as many arguments. It requires
+you to use a `PUT` HTTP request though, and expects each column to be declared as a value/key pair in your body's request.
+For instance, assuming you're in JavaScript land for instance, you could insert a column into your database with
+the following code.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('PUT', '/hyper-core/database/camphora/customers/insert', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    console.log('Item was successfully inserted with the id of; ' + window.res.id);
+    get_items ();
+  }
+};
+var name = 'John Doe';
+var email = 'john@doe.com';
+
+// Notice, assumes you have a name and email column, in your customer table, in your camphora database.
+xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURIComponent (email);
+```
 
