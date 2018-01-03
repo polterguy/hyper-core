@@ -84,7 +84,7 @@ The select operation takes the following optional parameters as HTTP GET paramet
 * __[limit]__ - Number of items to return. Defaults to `10`. Notice, for security reasons, it will throw an exception if you try to select more than 100 items.
 * __xxx__ - Becomes additional parts of your `where` clause.
 
-All parameters above are optional, and if not explicitly supplied, will be given _"sane defaults"_. If you want to 
+All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
 select only name and email columns, and sort descending by name, from your `my-cool-database` and 
 its `customers` table, you can accomplish that with the following URL.
 
