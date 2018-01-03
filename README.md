@@ -245,3 +245,7 @@ for instance `http://127.0.0.1:8080/modules/hyper-core/samples/minimalistic-crud
 on a locahost machine, expects a database called `camphora`, and a table called `foo`. If you use
 Camphora Five to create your test database, you'll need to create a Camphora Five app and name it `foo`.
 
+Alternatively, you can also of course edit the example code, to have it use another database,
+using for instance [Hyper IDE](https://github.com/polterguy/hyper-ide), which is bundled together with the main 
+download of Phosphorus Five.
+
