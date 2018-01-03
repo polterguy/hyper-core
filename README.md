@@ -75,7 +75,7 @@ access for a role to be able to have that role do anything towards any database 
 
 ### Select operation
 
-The select operation takes the following optional parameters as HTTP GET parameters. Notice,
+The select operation takes the following optional parameters as HTTP query parameters. Notice,
 all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
 This is a conscious choice, to eliminate that these parameters are _clashing_ with your generic column
 _"where"_ declarations.
@@ -121,7 +121,7 @@ containing _"hansen"_. The `select` operation requires you to use a GET HTTP req
 
 ## Insert operation
 
-The insert operation is arguably simpler than the `select` operation, since it doesn't require as many arguments. It requires
+The `insert` operation is arguably simpler than the `select` operation, since it doesn't require as many arguments. It requires
 you to use a `PUT` HTTP request though, and expects each column to be declared as a value/key pair in your body's request.
 For instance, assuming you're in JavaScript land for instance, you could insert a column into your database with
 the following code.
@@ -145,4 +145,23 @@ xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURICompo
 
 The `insert` operation will return the id of your inserted item, whatever that happens to be, or whatever the
 name of your id column happens to be.
+
+## Delete operation
+
+The `delete` operation requires you to use (shock) a `DELETE` HTTP method. It requires a single query parameter,
+declaring which column and value you wish to use as your `where` clause in your final SQL. To delete an item
+in our above `camphora.customers` database, having the id of 5 for instance, could be accomplished with the following
+code, assuming you're in JavaScript land.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('PUT', '/hyper-core/database/camphora/customers/delete?id=5', true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    alert(window.res.affected + ' items was successfully deleted');
+  }
+};
+xhr.send();
+```
 
