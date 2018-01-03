@@ -133,8 +133,7 @@ xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
-    console.log('Item was successfully inserted with the id of; ' + window.res.id);
-    get_items ();
+    alert('Item was successfully inserted with the id of; ' + window.res.id);
   }
 };
 var name = 'John Doe';
