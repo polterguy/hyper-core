@@ -89,22 +89,22 @@ select only name and email columns, and sort descending by name, from your `camp
 its `customers` table, you can accomplish that with the following URL.
 
 ```
-/hyper-core/database/my-cool-database/customers/select?[columns]=name,email&[sort-by]=name&[sort-dir]=desc
+/hyper-core/database/camphora/customers/select?[columns]=name,email&[sort-by]=name&[sort-dir]=desc
 ```
 
 The above will return the first 10 records, but only the name and email columns, and sort your results descending by
 their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
-contain three components, separated by `:`.
+contain three components, separated by `:`. Below are the explanation for these components.
 
 * __type__ - Type of column. Can be `string`, `date`, `bool`, etc.
 * __operand__ - Operand to use for your clause. Can be `like`, `=`, `>=`, etc.
 * __value__ - Value to compare against.
 
-If you'd like to retrieve only items which have a name containing the string `%hansen%` for instance, you can accomplish
-that with the following URL.
+If you'd like to retrieve only items which have a `name` containing the string `%hansen%` for instance, 
+you could accomplish that with the following URL.
 
 ```
-/hyper-core/database/my-cool-database/customers/select?name=string:like:%hansen%
+/hyper-core/database/camphora/customers/select?name=string:like:%hansen%
 ```
 
 **Important** - Remember to URL encode your URL!
