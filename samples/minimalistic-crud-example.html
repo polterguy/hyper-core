@@ -10,7 +10,7 @@
     <script>
 
 /*
- * Function that populates "ul" element above, with the ten first records from our database.
+ * Function that populates "ul" element above, with the first 50 records from our database.
  */
 function get_items () {
 
@@ -21,7 +21,7 @@ function get_items () {
   var xhr = new XMLHttpRequest();
 
   /*
-   * Retrieving first 10 items from our database, making sure we order them ascendingly.
+   * Retrieving first 50 items from our database, making sure we order them ascendingly.
    */
   xhr.open('GET', '/hyper-core/database/camphora/foo/select?[limit]=50', true);
 
