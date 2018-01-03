@@ -1,7 +1,7 @@
 # A generic REST web service
 
 Hyper Core is a back end for your web apps, built as a generic HTTP REST 
-web service. This allows you to build your front end, towards a mature and secure back end, 
+web service. This allows you to build your front end, towards a mature, reusable, and secure back end, 
 that automatically takes care of common security issues, such as SQL insertion attacks, and
 authorisation and authentication - While at the same time getting to reuse pre-built generic 
 operations, such as CRUD operations, towards your MySQL database(s). It is a fairly new project, 
@@ -12,7 +12,8 @@ depends upon Phosphorus Five to function.
 The idea if the project, is to provide a generic and extendible REST back end, arguably solving
 _"all"_ your needs for a back end, allowing you to use any front end you wish. However, at the
 time being, the only _"modules"_ it contains, is a MySQL REST service, allowing you to perform
-all basic CRUD operations on your MySQL database(s).
+all basic CRUD operations on your MySQL database(s) - In addition to an authentication module,
+allowing you to login and authenticate you towards the back end.
 
 ## MySQL CRUD operations
 
