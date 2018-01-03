@@ -149,7 +149,7 @@ code, assuming you're in JavaScript land.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('PUT', '/hyper-core/database/camphora/customers/delete?id=5', true);
+xhr.open('DELETE', '/hyper-core/database/camphora/customers/delete?id=5', true);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
