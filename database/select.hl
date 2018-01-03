@@ -120,7 +120,7 @@ p5.mysql.connect:[{0}]
       case:[limit]
       case:[order-by]
       case:[order-dir]
-        continue
+        .foo
       default
 
         /*

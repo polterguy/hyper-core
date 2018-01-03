@@ -56,11 +56,11 @@ _"where"_ declarations.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `OR`'ed together.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
-select only name and email columns, and sort descending by name, from your `camphora` database, and 
+select only name and id columns, and sort descending by name, from your `camphora` database, and 
 its `customers` table - You can accomplish that with the following URL.
 
 ```
-/hyper-core/database/camphora/customers/select?[columns]=name,email&[sort-by]=name&[sort-dir]=desc
+/hyper-core/database/camphora/customers/select?[columns]=name,id&[order-by]=name&[order-dir]=desc
 ```
 
 The above will return the first 10 records, but only the name and email columns, and sort your results descending by
@@ -116,7 +116,7 @@ name of your id column happens to be.
 
 ## Delete operation
 
-The `delete` operation requires you to use (shock) a `DELETE` HTTP method. It requires a single query parameter,
+The `delete` operation requires you to use a `DELETE` HTTP method. It requires a single query parameter,
 declaring which column and value you wish to use as your `where` clause in your final SQL. To delete an item
 in our above `camphora.customers` database, having the id of 5 for instance, could be accomplished with the following
 code, assuming you're in JavaScript land.
@@ -135,9 +135,11 @@ xhr.send();
 
 ## Authorisation objects
 
-Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth),
-to grant or deny access to database operations, for specific databases and tables, according to a user's role,
-and your access control objects. To allow for instance all users, including _"guest"_ visitors, to for instance 
+Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth).
+This implies that eachoperation, database,and table within your database, get its own unique URL.
+Since Phosphorus Five allows you to grant or deny access to URLs according to which role your currently
+logged in user belongs to - This gives you a highl fine grained control over who are allowed to do what
+in regards to your SQL operations. To allow for instance all users, including _"guest"_ visitors, to for instance 
 evaluate `select` operations towards your above `camphora` database, and its `customers` table, but deny everybody 
 except your _"developer"_ users to perform all other operations on the same database and table - You could create 
 an authorisation object that looks like the following.
