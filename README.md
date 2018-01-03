@@ -136,11 +136,11 @@ xhr.send();
 ## Authorisation objects
 
 Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth).
-This implies that eachoperation, database,and table within your database, get its own unique URL.
+This implies that each operation, database, and table within your database, get its own unique URL.
 Since Phosphorus Five allows you to grant or deny access to URLs according to which role your currently
-logged in user belongs to - This gives you a highl fine grained control over who are allowed to do what
+logged in user belongs to - This gives you a highly fine grained control over who are allowed to do what
 in regards to your SQL operations. To allow for instance all users, including _"guest"_ visitors, to for instance 
-evaluate `select` operations towards your above `camphora` database, and its `customers` table, but deny everybody 
+evaluate `select` operations towards your above `camphora` database, and its `customers` table - But deny everybody 
 except your _"developer"_ users to perform all other operations on the same database and table - You could create 
 an authorisation object that looks like the following.
 
