@@ -2,19 +2,25 @@
  * File responsible for selecting items from our database.
  * Expects [database] and [table] as arguments.
  *
- * It also expects the HTTP method to be of type 'GET', and can can any
- * additional arguments as HTTP GET QUERY paramaters, which will further refine
- * your MySQL select query.
+ * It also expects the HTTP method to be of type 'GET'.
  *
- * Most notably '[order-by]' and '[order-dir]', which orders your select, in addition
- * to '[limit]' and '[offset]', which becomes a limit and offset MySQL argument to
- * your query.
+ * Any optional HTTP GET QUERY parameters, will be used to refine the results 
+ * of your select query.
+ *
+ * Any '[order-by]' and '[order-dir]' QUERY parameters, will order your results accordingly.
+ * Any '[limit]' and '[offset]' QUERY parameters, will become a limit and offset
+ * parameter to your select SQL.
  *
  * All other HTTP GET QUERY parameters becomes a part of the additional "where" clause,
- * with their names being the column name, and their value should be in the form of
+ * with their names being the column name, and their value expected to be in the form of
  * "type:operand:value", where type can be e.g. "string", operand can be e.g. "like" or
  * ">=" etc, and value can be e.g. "%foo%" or "2018-01-01T13:34" - The latter which is
  * a "date" value.
+ *
+ * Obviously, this file will throw an exception, if you create erronous SQLs.
+ * It does no validation of your SQL, except of course guarding against SQL insertion attacks,
+ * but leaves it up to you to ensure you create SQL statements, which are legal according to your
+ * database schema.
  */
 
 
@@ -36,7 +42,7 @@ if:x:/@p5.web.request.get-method?value
 
 
 /*
- * Opening up our database connection, and evaluating our SELECT SQL statement, echoing the results
+ * Opening up our database connection, and evaluating our select SQL statement, echoing the results
  * to the client as JSON.
  */
 p5.mysql.connect:[{0}]
@@ -289,17 +295,11 @@ p5.mysql.connect:[{0}]
   /*
    * Transforming above results to JSON and returning it to caller as such.
    *
-   * Notice, to avoid having two properties with the same name, we'll need to run through and update
-   * the [row] children of the results of our [p5.mysql.select] invocation.
+   * Notice, to make sure we echo this as a JSON array to the client, we explicitly 
+   * set all names of all children of our [p5.mysql.select] invocation to "empty".
    */
-  .no:int:0
-  for-each:x:/@p5.mysql.select/*
-    set:x:/@_dp/#?name
-      src:item_{0}
-        :x:/@.no?value
-    set:x:/@.no?value
-      +:x:/@.no?value
-        _:1
+  set:x:/@p5.mysql.select/*?name
+    src:
   lambda2json:x:/@p5.mysql.select/*
 
   /*

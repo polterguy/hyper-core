@@ -33,7 +33,7 @@ function get_data () {
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       eval("window.res = " + xhr.responseText);
-      for (idx in res) {
+      for (var idx = 0; idx < res.length; idx++) {
         var el = document.createElement('li');
         el.innerHTML = res [idx].name;
         ul.appendChild(el);
