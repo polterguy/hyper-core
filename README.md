@@ -59,7 +59,7 @@ developer
 ```
 
 The first record above, gives all users access to the module in general, which is necessary
-to have the core URL resolver in Phosphorus Five's _"desktop"_ module to even resolve the URL,
+to have the core URL resolver in Phosphorus Five to even resolve the URL,
 and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
 all users access to do `select` operations on the `camphora` database, but only its `customers` table.
 The third record above, gives your `developer` users access to all operations on the
