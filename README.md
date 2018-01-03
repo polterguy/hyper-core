@@ -229,3 +229,19 @@ The default access control, unless explicitly overridden in your access control 
 to **deny all operations on all databases and all tables**. So you'll need to explicitly grant
 access for a role to be able to have that role do anything towards any database in your system.
 
+## Installation
+
+First you'll have to [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
+clone or download Hyper Core, and make sure you put it inside of your Phosphorus Five folder structure, 
+at _"/core/p5.web-app/modules/"_.
+
+### Creating an example database
+
+To create an example database, you can install [Camphora Five](https://github.com/polterguy/camphora-five),
+which is actually most easily installed through the _"Bazar"_ in Phosphorus Five. You can also use
+existing MySQL databases. However, if you choose the latter, you must **edit your web.config**, and make sure you
+set the `database-prefix` setting to an empty string. The example application, which can test out at
+for instance `http://127.0.0.1:8080/modules/hyper-core/samples/minimalistic-crud-example.html`, if you're
+on a locahost machine, expects a database called `camphora`, and a table called `foo`. If you use
+Camphora Five to create your test database, you'll need to create a Camphora Five app and name it `foo`.
+
