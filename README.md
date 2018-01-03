@@ -114,6 +114,32 @@ xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURICompo
 The `insert` operation will return the id of your inserted item, whatever that happens to be, or whatever the
 name of your id column happens to be.
 
+## Update operation
+
+The `update` operation requires you to use a `POST` HTTP request. It requires one query parameter declaring
+which item you'de like to update, and all of its new values as part of the body of your request. Assuming
+you're in JavaScript land, you could update an item with something resembling the following.
+
+```
+var id = 5;
+var name = 'John Doe';
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/hyper-core/database/camphora/customers/update?id=' + id, true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    console.log('Item was successfully updated, affected records was; ' + window.res.affected_records);
+    get_items ();
+  }
+};
+var body = 'name=' + name;
+xhr.send(body);
+```
+
+The above will update the `name` value for your `camphora.customers` database item with the id of 5, 
+and set its new value to _"John Doe"_.
+
 ## Delete operation
 
 The `delete` operation requires you to use a `DELETE` HTTP method. It requires a single query parameter,
