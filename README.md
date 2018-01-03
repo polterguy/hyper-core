@@ -45,7 +45,7 @@ perform a `select` query towards it for instance, you can accomplish that with t
 
 The select operation takes the following optional parameters as HTTP query parameters. Notice,
 all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
-This is a conscious choice, to eliminate that these parameters are _clashing_ with your generic column
+This is a conscious choice, to eliminate that these parameters are _"clashing"_ with your generic column
 _"where"_ declarations.
 
 * __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
@@ -57,7 +57,7 @@ _"where"_ declarations.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
 select only name and email columns, and sort descending by name, from your `camphora` database, and 
-its `customers` table, you can accomplish that with the following URL.
+its `customers` table - You can accomplish that with the following URL.
 
 ```
 /hyper-core/database/camphora/customers/select?[columns]=name,email&[sort-by]=name&[sort-dir]=desc
