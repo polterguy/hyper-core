@@ -2,11 +2,31 @@
 /*
  * Main URL resolver for Hyper Core.
  *
- * First we split the given [url] into it its main components,
+ * First we check if user has access to the current URL, 
+ * making sure we default access to false.
+ */
+split:x:/../*/url?value
+  =:?
+if
+  p5.auth.has-access-to-path:bool:false
+    filter:p5.url
+    path:x:/@split/0?name
+  not
+
+  /*
+   * User doesn't have access to this module.
+   */
+  p5.web.response.set-status-code:403
+  p5.web.echo:Access denied
+  return
+
+
+/*
+ * Then we split the given [url] into it its main components,
  * such that we can "outsource" further resolving, to whatever resolver this
  * particular URL was referring to.
  */
-split:x:/../*/url?value
+split:x:/@split/0?name
   =:/
 
 

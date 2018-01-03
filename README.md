@@ -1,17 +1,17 @@
 # A generic REST web service
 
-Hyper Core is a generic back end for your web apps, built as a generic REST HTTP 
-web service, allowing you to build your front end, towards a mature and secure back end, 
-automatically taking care of common security issues, such as SQL insertion attacks - While
-at the same time getting to reuse pre-built generic operations, such as CRUD operations,
-towards your MySQL database(s). It is a fairly new project, and should be considered BETA, 
-but contains the following main modules at the time being. Hyper Core is built is
-a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously
-dependent upon Phosphorus Five to function.
+Hyper Core is a back end for your web apps, built as a generic HTTP REST 
+web service. This allows you to build your front end, towards a mature and secure back end, 
+that automatically takes care of common security issues, such as SQL insertion attacks, and
+authorisation and authentication - While at the same time getting to reuse pre-built generic 
+operations, such as CRUD operations, towards your MySQL database(s). It is a fairly new project, 
+and should be considered BETA. Hyper Core is built is 
+a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously 
+depends upon Phosphorus Five to function.
 
 ## MySQL CRUD operations
 
-There are four basic CRUD operations you can perform on your MySQL database. These are as 
+There are four basic CRUD operations you can perform on your MySQL database(s). These are as 
 follows.
 
 * __[select]__ - Selects data from your MySQL database. Requires `GET` method.
@@ -19,8 +19,9 @@ follows.
 * __[delete]__ - Deletes data from your database. Requires `DELETE` method.
 * __[insert]__ - Inserts data into your database. Requires `PUT` method.
 
-Since each of the above operations have their own unique URL, you can use
-the integrated authentication and authorisation features of [Phosphorus Five](https://github.com/polterguy/phosphorusfive),
+Since each of the above operations have their own unique URL, and each database
+and table also gets its own unique virtual URL, this implies that you can use
+the integrated authentication and authorisation features of Phosphorus Five,
 through for instance its [Peeples](https://github.com/polterguy/peeples) module, 
 which allows you to allow or deny access to URLs, according to your users' role.
 Each of the above HTTP REST services follows the following URL format. 
@@ -29,16 +30,45 @@ Each of the above HTTP REST services follows the following URL format.
 /hyper-core/database/[database]/[table]/[operation]
 ```
 
-If you have a database called e.g. `my-cool-database`, with a table called `customers`, and you want to
+If you have a database called e.g. `camphora`, with a table called `customers`, and you want to
 perform a `select` query towards it for instance, you can accomplish that with the following URL.
 
 ```
-/hyper-core/database/my-cool-database/customers/select
+/*
+ * Optionally add QUERY parameters to create more 
+ * complex SELECT queries.
+ */
+/hyper-core/database/camphora/customers/select
 ```
 
-Assuming you have not changed the default installation folder of your Hyper Core module.
-Each of the four above operations, can take additional parameters, depending upon which operation
-you want to perform.
+### Authorisation objects
+
+Hyper Core builds on top of the extendible p5.auth project, to grant or deny access to database operations,
+for specific databases and tables, according to a user's role, and your access control objects. To allow 
+for instance all users, including _"guest"_ visitors, to for instance do `select` operations
+towards your above `camphora` database, and its `customers` table, but deny everybody except your _"developer"_
+users to perform all operations on the same database and table - You could create an authorisation object 
+that looks like the following.
+
+```
+*
+  p5.module.allow:/modules/hyper-core
+*
+  p5.url.allow:/hyper-core/database/camphora/customers/select
+developer
+  p5.url.allow:/hyper-core/database/camphora/customers
+```
+
+The first record above, gives all users access to the module in general, which is necessary
+to have the core URL resolver in Phosphorus Five's _"desktop"_ module to even resolve the URL,
+and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
+all users access to do `select` operations on the `camphora` database, but only its `customers` table.
+The third record above, gives your `developer` users access to all operations on the
+`camphora` database, but only its `customers` table.
+
+The default, unless explicitly overridden in your access control object, is to deny all
+operations on all databases and all tables. So you'll need to explicitly grant access,
+for a role to be able to do anything towards any database in your system.
 
 ### Select operation
 
