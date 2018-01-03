@@ -5,9 +5,14 @@ web service. This allows you to build your front end, towards a mature and secur
 that automatically takes care of common security issues, such as SQL insertion attacks, and
 authorisation and authentication - While at the same time getting to reuse pre-built generic 
 operations, such as CRUD operations, towards your MySQL database(s). It is a fairly new project, 
-and should be considered BETA. Hyper Core is built is 
+and should be considered **ALPHA**. Hyper Core is built is 
 a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously 
 depends upon Phosphorus Five to function.
+
+The idea if the project, is to provide a generic and extendible REST back end, arguably solving
+_"all"_ your needs for a back end, allowing you to use any front end you wish. However, at the
+time being, the only _"modules"_ it contains, is a MySQL REST service, allowing you to perform
+all basic CRUD operations on your MySQL database(s).
 
 ## MySQL CRUD operations
 
