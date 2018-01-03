@@ -75,7 +75,10 @@ access for a role to be able to have that role do anything towards any database 
 
 ### Select operation
 
-The select operation takes the following optional parameters as HTTP GET parameters.
+The select operation takes the following optional parameters as HTTP GET parameters. Notice,
+all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
+This is a conscious choice, to eliminate that these parameters are _clashing_ with your generic column
+where definitions.
 
 * __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
