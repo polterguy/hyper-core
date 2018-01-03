@@ -78,13 +78,13 @@ access for a role to be able to have that role do anything towards any database 
 The select operation takes the following optional parameters as HTTP GET parameters. Notice,
 all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
 This is a conscious choice, to eliminate that these parameters are _clashing_ with your generic column
-where definitions.
+_"where"_ declarations.
 
 * __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
 * __[order-dir]__ - Can be either _'asc'_ or _'desc'_, and declares whether or not you'd like to order ascending or descending. Defaults to _'asc'_.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
-* __[limit]__ - Number of items to return. Defaults to `10`. Notice, for security reasons, it will throw an exception if you try to select more than 100 items.
+* __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having front end buggy code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 100 items.
 * __xxx__ - Becomes additional parts of your `where` clause.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
