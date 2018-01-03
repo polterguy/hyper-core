@@ -15,6 +15,26 @@ time being, the only _"modules"_ it contains, is a MySQL REST service, allowing 
 all basic CRUD operations on your MySQL database(s) - In addition to an authentication module,
 allowing you to login and authenticate you towards the back end.
 
+## Authentication
+
+Authentication is done by issuing a `POST` HTTP request towards the login module. If you're in JavaScript
+land for instance, you can login with something resembling the following.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('PUT', '/hyper-core/login', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    alert('Result of login operation was; ' + window.res.result);
+  }
+};
+var username = 'your_username';
+var password = 'your_password';
+xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
+```
+
 ## MySQL CRUD operations
 
 There are four basic CRUD operations you can perform on your MySQL database(s). These are as 

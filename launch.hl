@@ -1,15 +1,42 @@
 /*
  * Main URL resolver for Hyper Core.
  *
- * First we check if user has access to the current URL, 
- * making sure we default access to false.
+ * First we remove any query parameters from the given URL.
  */
 split:x:/../*/url?value
   =:?
+
+
+/*
+ * Then we split the given main [url] into it its main components,
+ * such that we can "outsource" further resolving, to whatever resolver this
+ * particular URL was referring to.
+ */
+split:x:/@split/0?name
+  =:/
+
+
+/*
+ * Before we run our authorize logic, we check if this is a request for
+ * our "/login" url, at which we (obviously) allow everybody access.
+ */
+if:x:/@split/0/-?name
+  =:login
+  micro.evaluate.file:@HYPER-CORE/login/evaluate.hl
+  return
+else-if:x:/@split/0/-?name
+  =:logout
+  micro.evaluate.file:@HYPER-CORE/logout/evaluate.hl
+  return
+
+
+/*
+ * Then we verify that user has access to the URL he tries to resolve.
+ */
 if
   p5.auth.has-access-to-path:bool:false
     filter:p5.hyper-core
-    path:x:/@split/0?name
+    path:x:/../*/split/[0,1]/0?name
   not
 
   /*
@@ -18,15 +45,6 @@ if
   p5.web.response.set-status-code:403
   p5.web.echo:Access denied
   return
-
-
-/*
- * Then we split the given [url] into it its main components,
- * such that we can "outsource" further resolving, to whatever resolver this
- * particular URL was referring to.
- */
-split:x:/@split/0?name
-  =:/
 
 
 /*

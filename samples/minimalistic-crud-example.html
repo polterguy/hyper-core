@@ -6,8 +6,78 @@
   <body>
     <h1>CRUD example</h1>
     <ul id="names"></ul>
+    <button onclick="login ();return false;">Login</button>
+    <button onclick="logout ();return false;">Logout</button>
     <button onclick="insert_item ();return false;">Insert</button>
     <script>
+
+
+
+/*
+ * Asking user to provide his username and password, before invoking login module.
+ */
+function login () {
+
+  /*
+   * Retrieving username/password from user.
+   */
+  var username = prompt('Username');
+  var password = prompt('Password');
+
+  /*
+   *Creating and decorating our HTTP request.
+   */
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/hyper-core/login', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+      eval("window.res = " + xhr.responseText);
+      alert('You belong to the role of; ' + window.res.role);
+      get_items ();
+    }
+  };
+  xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password));
+}
+
+
+
+/*
+ * Asking user to provide his username and password, before invoking login module.
+ */
+function logout () {
+
+  /*
+   *Creating and decorating our HTTP request.
+   */
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/hyper-core/logout', true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+
+      eval("window.res = " + xhr.responseText);
+      alert('Status; ' + window.res.status);
+      window.location = window.location;
+    }
+  };
+  xhr.send ();
+}
 
 
 
@@ -26,7 +96,7 @@ function get_items () {
   /*
    * Retrieving first 50 items from our database, making sure we order them ascendingly.
    */
-  xhr.open('GET', '/hyper-core/database/camphora/foo/select?[limit]=50&[offset]=0&[order-by]=name&[order-dir]=asc&name=like:%hansen%', true);
+  xhr.open('GET', '/hyper-core/database/camphora/foo/select?[limit]=50', true);
 
   /*
    * Creating a "onfinished" callback for our XHR object.

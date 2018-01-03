@@ -1,0 +1,34 @@
+/*
+ * Logs out a user.
+ *
+ * Expects the current request being an HTTP GET request.
+ */
+
+
+/*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:GET
+  throw:This REST service requires you to use a GET HTTP method for your request.
+
+
+/*
+ * Logging out user.
+ */
+logout
+
+
+/*
+ * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+ * JSON results back to caller.
+ */
+p5.web.header.set:Content-Type
+  src:application/json
+
+
+/*
+ * Echoing success back to client.
+ */
+p5.web.echo:@"{""status"":""success""}"

@@ -1,0 +1,43 @@
+/*
+ * Logs in a user.
+ *
+ * Expects the current request being an HTTP POST request, and a username and password
+ * parameter.
+ */
+
+
+/*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:POST
+  throw:This REST service requires you to use a POST HTTP method for your request.
+
+
+/*
+ * Retrieving username and password.
+ */
+.args
+  username
+  password
+p5.web.post.get:x:/@.args/*?name
+login
+  username:x:/@p5.web.post.get/*/username?value
+  password:x:/@p5.web.post.get/*/password?value
+
+
+/*
+ * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+ * JSON results back to caller.
+ */
+p5.web.header.set:Content-Type
+  src:application/json
+
+
+/*
+ * Echoing the role user belongs to back to caller.
+ */
+whoami
+p5.web.echo:@"{{""role"":""{0}""}}"
+  :x:/@whoami/*/role?value
