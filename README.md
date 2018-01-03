@@ -35,8 +35,7 @@ perform a `select` query towards it for instance, you can accomplish that with t
 
 ```
 /*
- * Optionally add QUERY parameters to create more 
- * complex SELECT queries.
+ * Optionally add QUERY parameters to create more complex SELECT queries.
  */
 /hyper-core/database/camphora/customers/select
 ```
