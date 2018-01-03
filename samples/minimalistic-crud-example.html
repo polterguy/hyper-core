@@ -6,18 +6,16 @@
   <body>
     <h1>CRUD example</h1>
     <ul id="names"></ul>
-    <button onclick="insert();return false;">Insert</button>
+    <button onclick="insert_item ();return false;">Insert</button>
     <script>
 
 /*
- * Function that populates "ul" element above, with the ten first records
- * from your database.
+ * Function that populates "ul" element above, with the ten first records from our database.
  */
-function get_data () {
+function get_items () {
 
   /*
-   * Retrieves our above "ul" element, and creates an XHR object, to retrieve JSON
-   * data from the server.
+   * Retrieves our above "ul" element, and creates an XHR object, to retrieve JSON data from the server.
    */
   var ul = document.getElementById ('names');
   var xhr = new XMLHttpRequest();
@@ -32,27 +30,60 @@ function get_data () {
    */
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+
+      /*
+       * Deleting all old items from 'ul' element.
+       */
+      while (ul.firstChild) {
+          ul.removeChild(ul.firstChild);
+      }
+
+      /*
+       * Evaluating our JSON returned from server, and iterating through each item,
+       * creating one "li" wrapper for each record.
+       */
       eval("window.res = " + xhr.responseText);
       for (var idx = 0; idx < res.length; idx++) {
-        var el = document.createElement('li');
-        el.innerHTML = res [idx].name;
-        ul.appendChild(el);
+
+        // Creating new "li" element.
+        var li = document.createElement('li');
+
+        // Adding "span" element to show "name" from item.
+        var span = document.createElement('span');
+        span.innerHTML = res [idx].name;
+        li.appendChild (span);
+
+        // Creating a "delete" button.
+        var del = document.createElement('button');
+        del.style.cssText = "margin-left:15px;";
+        del.onclick = function (event) {delete_item (event.target.getAttribute('data-value'));return false;};
+        del.innerHTML = 'delete';
+        del.setAttribute ("data-value", res [idx].id);
+        li.appendChild (del);
+
+        // Appending main "li" element to "ul" element.
+        ul.appendChild (li);
       }
     }
   };
+
+  // Invoking our HTTP REST service.
   xhr.send();
 }
-
-/*
- * Populates "ul" element above, using our HTTP REST "select" wrapper function created above.
- */
-get_data();
 
 
 /*
  * Asks user to provide a name, and invokes our server side HTTP REST database "insert" method.
  */
-function insert () {
+function insert_item () {
 
   /*
    * Asks user to provide us with a name.
@@ -66,23 +97,87 @@ function insert () {
 
   /*
    * Invoking our "insert" method, notice contrary to our "select" method, our
-   * "insert" method requires us to use the HTTP POST verb.
+   * "insert" method requires us to use the HTTP PUT verb.
    */
   xhr.open('PUT', '/hyper-core/database/camphora/foo/insert', true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  /*
+   * Creating an "onfinished" callback for our XHR object.
+   */
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+
+      /*
+       * Doing some basic logging and re-databinding our "ul" element again.
+       */
+      eval("window.res = " + xhr.responseText);
+      console.log('Item was successfully inderted with the id of; ' + window.res.id);
+      get_items ();
+    }
+  };
+
+  // Sending our body to server.
+  var body = 'name=' + name;
+  xhr.send(body);
+}
+
+
+/*
+ * Asks user to provide a name, and invokes our server side HTTP REST database "insert" method.
+ */
+function delete_item (id) {
+
+  /*
+   * Creates our XHR object, which will invoke our "insert" method on the server side.
+   */
+  var xhr = new XMLHttpRequest();
+
+  /*
+   * Invoking our "insert" method, notice contrary to our "select" method, our
+   * "insert" method requires us to use the HTTP POST verb.
+   */
+  xhr.open('DELETE', '/hyper-core/database/camphora/foo/delete?id=' + id, true);
 
   /*
    * Creating a "onfinished" callback for our XHR object.
    */
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
+
+      /*
+       * Checking if this was a success or not.
+       */
+      if (xhr.status != 200) {
+        alert(xhr.responseText);
+        return;
+      }
+
+      /*
+       * Doing some basic logging, and re-databinding our "ul" items again.
+       */
       eval("window.res = " + xhr.responseText);
-      alert('Item was successfully inderted with the id of; ' + window.res.id);
+      console.log('Item was successfully deleted');
+      get_items ();
     }
   };
-  var body = 'name=' + name;
-  xhr.send(body);
+
+  // Invoking our HTTP REST service.
+  xhr.send();
 }
+
+/*
+ * Populates "ul" element above, using our HTTP REST "select" wrapper function created above.
+ */
+get_items();
     </script>
   </body>
 </html>

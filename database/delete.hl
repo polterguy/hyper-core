@@ -1,0 +1,156 @@
+/*
+ * File responsible for performing delete on one or more record in some specific MySQL database table.
+ *
+ * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
+ * this one will require the caller to use a DELETE HTTP request.
+ *
+ * Pass in any HTTP parameters you wish, which will parametrise the delete SQL accordingly.
+ * E.g. "id=5, 6, 7" to delete items with id "5", "6" and "7".
+ *
+ * Obviously, this file will throw an exception, if you create erronous SQLs.
+ * It does no validation of your SQL, except of course guarding against SQL insertion attacks,
+ * but leaves it up to you to ensure you create SQL statements, which are legal according to your
+ * database schema.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  database:string
+  table:string
+
+
+/*
+ * Sanity checking HTTP method.
+ */
+p5.web.request.get-method
+if:x:/@p5.web.request.get-method?value
+  !=:DELETE
+  throw:This REST service requires you to use a DELETE HTTP method for your request.
+
+
+/*
+ * Opening up our database connection, and evaluating our INSERT SQL statement, 
+ * echoing the id of the inserted item back to the client as JSON.
+ */
+p5.mysql.connect:[{0}]
+  :x:/../*/database?value
+
+  /*
+   * Our actual SQL, which is further parametrised, according to arguments given by the client
+   * as HTTP GET POST parameters.
+   *
+   * Making sure we avoid SQL insertion attack on table name.
+   */
+  replace:x:/../*/table?value
+    src:`
+    dest:\`
+  eval-x:x:/+
+  .sql:delete from `{0}`
+    :x:/@replace?value
+
+  /*
+   * Further parametrising our SQL according to HTTP parameters supplied by client.
+   */
+  .no:int:0
+  p5.web.query.list
+
+  /*
+   * Notice, contrary to someof the other verbs, the delete operation can only
+   * handle exactly one HTTP QUERY parameter.
+   */
+  if:x:/@p5.web.query.list/*?count
+    !=:int:1
+    throw:The delete operation must be given exactly one parameter.
+
+  /*
+   * Looping through each QUERY from above.
+   */
+  for-each:x:/@p5.web.query.list/*?name
+
+    /*
+     * Making sure we avoid SQL insertion attacks on column name.
+     */
+    replace:x:/@_dp?value
+      src:`
+      dest:\`
+
+    /*
+     * Retrieving currently iterated parameter's value, and splitting it on "," to parametrise our
+     * SQL, with each comma separated value supplied by client.
+     */
+    p5.web.query.get:x:/@_dp?value
+    split:x:/@p5.web.query.get/*?value
+      =:,
+    for-each:x:/@split/*?name
+
+      /*
+       * Appending either "where" or "or" to our SQL, depending upon whether or
+       * not this our first "where" clause, implying the first parameter we
+       * add to our SQL.
+       */
+      if:x:/@.no?value
+        =:int:0
+
+        /*
+         * First generic parameter, making sure we add a "where" clause.
+         */
+        set:x:/@.sql?value
+          src:{0} where
+            :x:/@.sql?value
+
+      else
+
+        /*
+         * Not the first parameter, hence we add an "and" clause.
+         */
+        set:x:/@.sql?value
+          src:{0} or
+            :x:/@.sql?value
+
+      /*
+       * Adding condition.
+       */
+      set:x:/@.sql?value
+        src:{0} `{1}` = @NO{2}
+          :x:/@.sql?value
+          :x:/@replace?value
+          :x:/@.no?value
+
+      /*
+       * Adding SQL parameter to [p5.mysql.select] invocation.
+       */
+      set:x:/+2/*/*?name
+        src:@NO{0}
+          :x:/@.no?value
+      eval-x:x:/+/*/*
+      add:x:/..p5.mysql.connect/*/p5.mysql.delete
+        src
+          foo:x:/@_dp?value
+
+      /*
+       * Increamenting "counter", which dynamically creates our SQL parameter's names.
+       */
+      set:x:/@.no?value
+        +:x:/@.no?value
+          _:1
+
+  /*
+   * Executing actual SQL, now that we have parametrised it, and returning results to client as JSON.
+   */
+  p5.mysql.delete:x:/@.sql?value
+
+  /*
+   * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+   * JSON results back to caller.
+   */
+  p5.web.header.set:Content-Type
+    src:application/json
+
+  /*
+   * Returning JSON to caller implying how many records were affected.
+   */
+  p5.web.echo:@"{{""affected"":""{0}""}}"
+    :x:/@p5.mysql.delete?value
