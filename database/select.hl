@@ -225,6 +225,13 @@ p5.mysql.connect:[{0}]
   p5.web.query.get:[offset]
 
   /*
+   * Making sure client doesn't try to select more than 100 records.
+   */
+  if:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*|/@.defaults/1)/$?value.long
+    >:long:100
+    throw:You can't select more than 100 records at the time.
+
+  /*
    * Checking if client supplied an "order by" QUERY parameter.
    */
   if:x:/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*?value
