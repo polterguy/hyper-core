@@ -10,7 +10,7 @@
  */
 p5.web.request.get-method
 if:x:/@p5.web.request.get-method?value
-  !=:GET
+  !=:DELETE
   throw:This REST service requires you to use a GET HTTP method for your request.
 
 

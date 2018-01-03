@@ -22,7 +22,7 @@ land for instance, you can login with something resembling the following.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('PUT', '/hyper-core/login', true);
+xhr.open('POST', '/hyper-core/login', true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
@@ -33,6 +33,21 @@ xhr.onreadystatechange = function() {
 var username = 'your_username';
 var password = 'your_password';
 xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
+```
+
+If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. Example
+can be found beneath.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('DELETE', '/hyper-core/logout', true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    alert('Status; ' + window.res.status);
+  }
+};
+xhr.send();
 ```
 
 ## MySQL CRUD operations

@@ -59,7 +59,7 @@ function logout () {
    *Creating and decorating our HTTP request.
    */
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/hyper-core/logout', true);
+  xhr.open('DELETE', '/hyper-core/logout', true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
 
