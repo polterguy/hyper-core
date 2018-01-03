@@ -143,3 +143,6 @@ var email = 'john@doe.com';
 xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURIComponent (email);
 ```
 
+The `insert` operation will return the id of your inserted item, whatever that happens to be, or whatever the
+name of your id column happens to be.
+
