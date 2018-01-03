@@ -233,7 +233,7 @@ access for a role to be able to have that role do anything towards any database 
 
 First you'll have to [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
 clone or download Hyper Core, and make sure you put it inside of your Phosphorus Five folder structure, 
-at _"/core/p5.web-app/modules/"_.
+at _"/core/p5.webapp/modules/"_.
 
 ### Creating an example database
 
