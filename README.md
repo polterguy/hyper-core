@@ -40,39 +40,6 @@ perform a `select` query towards it for instance, you can accomplish that with t
 /hyper-core/database/camphora/customers/select
 ```
 
-### Authorisation objects
-
-Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth),
-to grant or deny access to database operations, for specific databases and tables, according to a user's role,
-and your access control objects. To allow for instance all users, including _"guest"_ visitors, to for instance 
-evaluate `select` operations towards your above `camphora` database, and its `customers` table, but deny everybody 
-except your _"developer"_ users to perform all other operations on the same database and table - You could create 
-an authorisation object that looks like the following.
-
-```
-*
-  p5.module.allow:/modules/hyper-core
-*
-  p5.hyper-core.allow:/hyper-core/database/camphora/customers/select
-developer
-  p5.hyper-core.allow:/hyper-core/database/camphora/customers
-```
-
-The first record above, gives all users access to the module in general, which is necessary
-to have the core URL resolver in Phosphorus Five to even resolve the URL,
-and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
-all users access to do `select` operations on the `camphora` database, but only its `customers` table.
-The third record above, gives your `developer` users access to all operations on the
-`camphora` database, but only its `customers` table.
-
-All in all, the above three access control objects, gives your developer users complete control
-over the `camphora.customers` database, while random visitors have only `select` rights on the
-same database.
-
-The default access control, unless explicitly overridden in your access control object, is 
-to **deny all operations on all databases and all tables**. So you'll need to explicitly grant
-access for a role to be able to have that role do anything towards any database in your system.
-
 ### Select operation
 
 The select operation takes the following optional parameters as HTTP query parameters. Notice,
@@ -164,4 +131,37 @@ xhr.onreadystatechange = function() {
 };
 xhr.send();
 ```
+
+## Authorisation objects
+
+Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth),
+to grant or deny access to database operations, for specific databases and tables, according to a user's role,
+and your access control objects. To allow for instance all users, including _"guest"_ visitors, to for instance 
+evaluate `select` operations towards your above `camphora` database, and its `customers` table, but deny everybody 
+except your _"developer"_ users to perform all other operations on the same database and table - You could create 
+an authorisation object that looks like the following.
+
+```
+*
+  p5.module.allow:/modules/hyper-core
+*
+  p5.hyper-core.allow:/hyper-core/database/camphora/customers/select
+developer
+  p5.hyper-core.allow:/hyper-core/database/camphora/customers
+```
+
+The first record above, gives all users access to the module in general, which is necessary
+to have the core URL resolver in Phosphorus Five to even resolve the URL,
+and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
+all users access to do `select` operations on the `camphora` database, but only its `customers` table.
+The third record above, gives your `developer` users access to all operations on the
+`camphora` database, but only its `customers` table.
+
+All in all, the above three access control objects, gives your developer users complete control
+over the `camphora.customers` database, while random visitors have only `select` rights on the
+same database.
+
+The default access control, unless explicitly overridden in your access control object, is 
+to **deny all operations on all databases and all tables**. So you'll need to explicitly grant
+access for a role to be able to have that role do anything towards any database in your system.
 
