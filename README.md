@@ -85,7 +85,7 @@ The select operation takes the following optional parameters as HTTP GET paramet
 * __xxx__ - Becomes additional parts of your `where` clause.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
-select only name and email columns, and sort descending by name, from your `my-cool-database` and 
+select only name and email columns, and sort descending by name, from your `camphora` database, and 
 its `customers` table, you can accomplish that with the following URL.
 
 ```
