@@ -103,7 +103,7 @@ p5.mysql.connect:[{0}]
       else
 
         /*
-         * Not the first parameter, hence we add an "and" clause.
+         * Not the first parameter, hence we add an "or" clause.
          */
         set:x:/@.sql?value
           src:{0} or
