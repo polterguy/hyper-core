@@ -25,7 +25,7 @@ function get_data () {
   /*
    * Retrieving first 10 items from our database, making sure we order them ascendingly.
    */
-  xhr.open('GET', '/hyper-core/database/camphora/foo/select', true);
+  xhr.open('GET', '/hyper-core/database/camphora/foo/select?[limit]=50', true);
 
   /*
    * Creating a "onfinished" callback for our XHR object.

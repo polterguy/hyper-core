@@ -150,6 +150,8 @@ p5.mysql.connect:[{0}]
   /*
    * Making sure we return the "id" of our inserted item, as JSON back to client,
    * with the "id" property being the database id of our inserted item.
+   *
+   * We also make sure we return this ac "Content-Type" being JSON type.
    */
   p5.web.header.set:Content-Type
     src:application/json
