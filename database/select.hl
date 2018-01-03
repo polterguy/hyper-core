@@ -155,18 +155,16 @@ p5.mysql.connect:[{0}]
         /*
          * Splitting query value to get "type", "operand", and "value".
          */
-        split:x:/@_dp?value
+        split:x:/@p5.web.query.get/*?value
           =:":"
 
         /*
-         * Retrieving our "type" and "operand", and removing them from the above
+         * Retrieving our "operand", and removing it from the above
          * [split] results afterwards.
          */
         eval-x:x:/+
-        .type:x:/@split/0?name
-        eval-x:x:/+
-        .operand:x:/@split/1?name
-        set:x:/@split(/0|/1)
+        .operand:x:/@split/0?name
+        set:x:/@split/0
 
         /*
          * In case "value" parts contains a ":", there will more than one
@@ -177,31 +175,12 @@ p5.mysql.connect:[{0}]
           sep:":"
 
         /*
-         * Sanity checking "type", by making sure it's a type that
-         * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
-         *
-         * TODO: Check up that we add all types that MySQL supports.
-         */
-        switch:x:/@.type?value
-          case:bool
-          case:int
-          case:long
-          case:date
-          case:string
-          case:decimal
-            // Need to have some node in this lambda, to prevent fall through to our default.
-            .foo
-          default
-            throw:Type '{0}' is not supported
-              :x:/@.type?value
-
-        /*
          * Sanity checking "operand", by making sure it's an operand that
          * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
          *
          * TODO: Check up that we add all operands that MySQL supports.
          */
-        switch:x:/@.type?value
+        switch:x:/@.operand?value
           case:=
           case:!=
           case:like
@@ -229,7 +208,7 @@ p5.mysql.connect:[{0}]
          * our operand (>, !=, <=, like, etc), and the fourth part the value to compare against.
          */
         set:x:/@.sql?value
-          src:{0} `{1}` {2} @NO{2}
+          src:{0} `{1}` {2} @NO{3}
             :x:/@.sql?value
             :x:/@replace?value
             :x:/@.operand?value
@@ -238,12 +217,13 @@ p5.mysql.connect:[{0}]
         /*
          * Adding SQL parameter to [p5.mysql.select] invocation.
          */
-        set:x:/+/*/*?name
+        set:x:/+2/*/*?name
           src:@NO{0}
             :x:/@.no?value
+        eval-x:x:/+/*/*
         add:x:/..p5.mysql.connect/*/p5.mysql.select
           src
-            foo:x:/@p5.web.query.get/*?value
+            foo:x:/@join?value
 
         /*
          * Increamenting "counter", which dynamically creates our SQL parameter's names.
