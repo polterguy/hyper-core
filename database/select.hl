@@ -258,7 +258,7 @@ p5.mysql.connect:[{0}]
    * Notice, we default offset to 0 and limit to 10, to avoid exhausting server resources by making humongously
    * large selects.
    *
-   * We also throw an exception if client tries to select more than 100 records, to avoid having the server
+   * We also throw an exception if client tries to select more than 1000 records, to avoid having the server
    * being exhausted by erronous client-side code.
    */
   .defaults
@@ -271,11 +271,11 @@ p5.mysql.connect:[{0}]
   p5.web.query.get:[offset]
 
   /*
-   * Making sure client doesn't try to select more than 100 records.
+   * Making sure client doesn't try to select more than 1000 records.
    */
   if:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*|/@.defaults/1)/$?value.long
-    >:long:100
-    throw:You can't select more than 100 records at the time.
+    >:long:1000
+    throw:You can't select more than 1000 records at the time.
 
   /*
    * Checking if client supplied an "order by" QUERY parameter.
