@@ -111,7 +111,7 @@ you could accomplish that with the following URL.
 
 **Important** - Remember to URL encode your URL!
 
-Notice, if you supply multiple additional query parameters, these will be `OR` together in your select SQL.
+Notice, if you supply multiple additional query parameters, these will be `OR`'ed together in your select SQL.
 This means that the following would select all items having either the firstname containing _"john"_, or the surname 
 containing _"hansen"_.
 
