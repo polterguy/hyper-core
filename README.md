@@ -249,3 +249,7 @@ Alternatively, you can also of course edit the example code, to have it use anot
 using for instance [Hyper IDE](https://github.com/polterguy/hyper-ide), which is bundled together with the main 
 download of Phosphorus Five.
 
+## Warning
+
+This is **ALPHA** stuff, and **NOT** ready for production.
+
