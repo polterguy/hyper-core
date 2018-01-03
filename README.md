@@ -79,7 +79,7 @@ The select operation takes the following optional parameters as HTTP GET paramet
 
 * __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
-* __[order-dir]__ - Can be either 'asc' or 'desc', and declares whether or not you'd like to order ascending or descending. Defaults to `asc`.
+* __[order-dir]__ - Can be either _'asc'_ or _'desc'_, and declares whether or not you'd like to order ascending or descending. Defaults to `asc`.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`.
 * __xxx__ - Becomes additional parts of your `where` clause.
