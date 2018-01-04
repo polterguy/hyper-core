@@ -1,4 +1,4 @@
-# An HTTP REST based ORM
+# An HTTP REST based MySQL ORM
 
 Hyper Core is a back end for your web apps, built as a generic HTTP REST 
 web service. This allows you to build your front end, towards a mature, reusable, and secure back end, 
@@ -8,12 +8,6 @@ operations, such as CRUD operations, towards your MySQL database(s). It is a fai
 and should be considered **ALPHA**. Hyper Core is built is 
 a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously 
 depends upon Phosphorus Five to function.
-
-The idea if the project, is to provide a generic and extendible REST back end, arguably solving
-_"all"_ your needs for a back end, allowing you to use any front end you wish. However, at the
-time being, the only _"modules"_ it contains, is a MySQL REST service, allowing you to perform
-all basic CRUD operations on your MySQL database(s) - In addition to an authentication module,
-allowing you to login and authenticate you towards the back end.
 
 ## Authentication
 
@@ -63,7 +57,7 @@ follows.
 Each of the above HTTP REST services follows the following URL format. 
 
 ```
-/hyper-core/database/[database]/[table]/[operation]
+/hyper-core/mysql/[database]/[table]/[operation]
 ```
 
 If you have a database called e.g. `camphora`, with a table called `customers`, and you want to
@@ -73,7 +67,7 @@ perform a `select` query towards it for instance, you can accomplish that with t
 /*
  * Optionally add QUERY parameters to create more complex SELECT queries.
  */
-/hyper-core/database/camphora/customers/select
+/hyper-core/mysql/camphora/customers/select
 ```
 
 ### Select operation
@@ -87,7 +81,7 @@ _"where"_ declarations.
 * __[order-by]__ - Which column you want to order your select query by. No default value.
 * __[order-dir]__ - Can be either _'asc'_ or _'desc'_, and declares whether or not you'd like to order ascending or descending. Defaults to _'asc'_.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
-* __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 1,000 items.
+* __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 250 items.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `OR`'ed together.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
@@ -95,7 +89,7 @@ select only name and id columns, and sort descending by name, from your `camphor
 its `customers` table - You can accomplish that with the following URL.
 
 ```
-/hyper-core/database/camphora/customers/select?[columns]=name,id&[order-by]=name&[order-dir]=desc
+/hyper-core/mysql/camphora/customers/select?[columns]=name,id&[order-by]=name&[order-dir]=desc
 ```
 
 The above will return the first 10 records, but only the name and email columns, and sort your results descending by
@@ -109,7 +103,7 @@ If you'd like to retrieve only items which have a `name` containing the string `
 you could accomplish that with the following URL.
 
 ```
-/hyper-core/database/camphora/customers/select?name=like:%hansen%
+/hyper-core/mysql/camphora/customers/select?name=like:%hansen%
 ```
 
 **Important** - Remember to URL encode your URL!
@@ -119,7 +113,7 @@ This means that the following would select all items having either the firstname
 containing _"hansen"_. The `select` operation requires you to use a GET HTTP request.
 
 ```
-/hyper-core/database/camphora/customers/select?firstname=like:%john%&surname=like:%hansen%
+/hyper-core/mysql/camphora/customers/select?firstname=like:%john%&surname=like:%hansen%
 ```
 
 ## Insert operation
@@ -131,7 +125,7 @@ the following code.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('PUT', '/hyper-core/database/camphora/customers/insert', true);
+xhr.open('PUT', '/hyper-core/mysql/camphora/customers/insert', true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
@@ -159,7 +153,7 @@ you're in JavaScript land, you could update an item with something resembling th
 var id = 5;
 var name = 'John Doe';
 var xhr = new XMLHttpRequest();
-xhr.open('POST', '/hyper-core/database/camphora/customers/update?id=' + id, true);
+xhr.open('POST', '/hyper-core/mysql/camphora/customers/update?id=' + id, true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
@@ -184,7 +178,7 @@ code, assuming you're in JavaScript land.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('DELETE', '/hyper-core/database/camphora/customers/delete?id=5', true);
+xhr.open('DELETE', '/hyper-core/mysql/camphora/customers/delete?id=5', true);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
@@ -209,9 +203,9 @@ an authorisation object that looks like the following.
 *
   p5.module.allow:/modules/hyper-core
 *
-  p5.hyper-core.allow:/hyper-core/database/camphora/customers/select
+  p5.hyper-core.allow:/hyper-core/mysql/camphora/customers/select
 developer
-  p5.hyper-core.allow:/hyper-core/database/camphora/customers
+  p5.hyper-core.allow:/hyper-core/mysql/camphora/customers
 ```
 
 The first record above, gives all users access to the module in general, which is necessary
@@ -240,7 +234,7 @@ at _"/core/p5.webapp/modules/"_.
 To create an example database, you can install [Camphora Five](https://github.com/polterguy/camphora-five),
 which is actually most easily installed through the _"Bazar"_ in Phosphorus Five. You can also use
 existing MySQL databases. However, if you choose the latter, you must **edit your web.config**, and make sure you
-set the `database-prefix` setting to an empty string. The example application, which can test out at
+set the `p5.data.prefix` setting to an empty string. The example application, which can test out at
 for instance `http://127.0.0.1:8080/modules/hyper-core/samples/minimalistic-crud-example.html`, if you're
 on a locahost machine, expects a database called `camphora`, and a table called `foo`. If you use
 Camphora Five to create your test database, you'll need to create a Camphora Five app and name it `foo`.
