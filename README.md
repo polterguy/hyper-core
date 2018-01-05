@@ -37,7 +37,7 @@ perform a `select` query towards it for instance, you can use the following URL.
 
 The select operation takes the following optional parameters as HTTP query parameters. Notice,
 all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
-This is a conscious choice, to eliminate that these parameters are _"clashing"_ with your generic column
+This is to prevent these parameters from _"clashing"_ with your generic column
 _"where"_ declarations.
 
 * __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
