@@ -239,7 +239,8 @@ access for a role to be able to have that role do anything towards any database 
 
 ## Installation
 
-First you'll have to [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
+Hyper Core has not yet been releases, which means that if you want to test it, you'll have to
+first first of all [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
 clone or download Hyper Core, and make sure you put it inside of your Phosphorus Five folder structure, 
 at _"/core/p5.webapp/modules/"_.
 
