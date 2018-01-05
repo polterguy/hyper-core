@@ -48,9 +48,6 @@ p5.mysql.connect:[{0}]
   :x:/../*/database?value
 
   /*
-   * Our actual SQL, which is further parametrised, according to arguments given by the client, 
-   * as HTTP GET QUERY parameters.
-   *
    * First retrieving our columns, making sure we guard against SQL insertion attacks.
    */
   .defaults
@@ -98,6 +95,21 @@ p5.mysql.connect:[{0}]
     :x:/@replace?value
 
   /*
+   * Then retrieving what operator to use, defaulting to "or".
+   *
+   * Making sure we only accept something that's logically legal, 
+   * and doesn't produce an SQL insertion attack.
+   */
+  .boolean
+  set:x:/@.boolean?value
+    eval
+      p5.web.query.get:[boolean]
+      if:x:/@p5.web.query.get/*?value
+        =:and
+        return:and
+      return:or
+
+  /*
    * Further parametrising our SQL according to GET QUERY parameters supplied by client.
    */
   .no:int:0
@@ -114,6 +126,7 @@ p5.mysql.connect:[{0}]
        * Ignoring [offset], [limit], [columns], [order-by] and [order-dir],
        * since they're handled further down.
        */
+      case:[boolean]
       case:[columns]
       case:[offset]
       case:[limit]
@@ -143,11 +156,12 @@ p5.mysql.connect:[{0}]
         else
 
           /*
-           * Not the first parameter, hence we add an "AND" clause.
+           * Not the first parameter, hence we add our operator part.
            */
           set:x:/@.sql?value
-            src:{0} and
+            src:{0} {1}
               :x:/@.sql?value
+              :x:/@.boolean?value
 
         /*
          * Retrieving operand and value of our QUERY parameter, and handling it accordingly.

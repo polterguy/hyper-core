@@ -40,9 +40,10 @@ all _"special parameter types"_, such as columns, requires square brackets surro
 This is to prevent these parameters from _"clashing"_ with your generic column
 _"where"_ declarations.
 
+* __[boolean]__ - Which boolean operator to use for multiple filter criteria. Defaults to `OR`.
 * __[columns]__ - Which columns you want to select, defaults to `*` (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
-* __[order-dir]__ - Can be either `asc` or `desc`, and declares whether or not you'd like to order ascending or descending. Defaults to _'asc'_.
+* __[order-dir]__ - Can be either `asc` or `desc`, and declares whether or not you'd like to order ascending or descending. Defaults to `asc`.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 250 items.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `AND`'ed together by default.
