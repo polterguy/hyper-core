@@ -49,7 +49,7 @@ _"where"_ declarations.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `AND`'ed together by default.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
-select only name and id columns, and sort descending by `description`, from your `todo` database, and 
+select only the `description` and `id` columns, and sort descending by `description`, from your `todo` database, and 
 its `items` table - You can accomplish that with the following URL.
 
 ```
