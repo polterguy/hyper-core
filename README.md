@@ -49,11 +49,11 @@ _"where"_ declarations.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `AND`'ed together by default.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
-select only name and id columns, and sort descending by name, from your `camphora` database, and 
-its `customers` table - You can accomplish that with the following URL.
+select only name and id columns, and sort descending by `description`, from your `todo` database, and 
+its `items` table - You can accomplish that with the following URL.
 
 ```
-/hyper-core/mysql/camphora/customers/select?[columns]=name,id&[order-by]=name&[order-dir]=desc
+/hyper-core/mysql/todo/items/select?[columns]=description,id&[order-by]=description&[order-dir]=desc
 ```
 
 The above will return the first 10 records, but only the name and email columns, and sort your results descending by
