@@ -5,42 +5,7 @@ This allows you to build your front end, towards a mature, reusable, and secure 
 that automatically takes care of common security issues, such as SQL insertion attacks, and
 authorisation and authentication. Hyper Core is a 
 a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence requires
-you to use Phosphorus Five as the core.
-
-## Authentication
-
-Authentication is done by issuing a `POST` HTTP request towards the login module. If you're in JavaScript
-land for instance, you can login with something resembling the following.
-
-```
-var xhr = new XMLHttpRequest();
-xhr.open('POST', '/hyper-core/login', true);
-xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-xhr.onreadystatechange = function() {
-  if (xhr.readyState === 4) {
-    eval("window.res = " + xhr.responseText);
-    alert('Result of login operation was; ' + window.res.result);
-  }
-};
-var username = 'your_username';
-var password = 'your_password';
-xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
-```
-
-If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. Example
-can be found beneath.
-
-```
-var xhr = new XMLHttpRequest();
-xhr.open('DELETE', '/hyper-core/logout', true);
-xhr.onreadystatechange = function() {
-  if (xhr.readyState === 4) {
-    eval("window.res = " + xhr.responseText);
-    alert('Status; ' + window.res.status);
-  }
-};
-xhr.send();
-```
+you to use Phosphorus Five as your core.
 
 ## MySQL CRUD operations
 
@@ -114,7 +79,7 @@ containing _"hansen"_. The `select` operation requires you to use a GET HTTP req
 /hyper-core/mysql/camphora/customers/select?firstname=like:%john%&surname=like:%hansen%
 ```
 
-## Insert operation
+### Insert operation
 
 The `insert` operation is arguably simpler than the `select` operation, since it doesn't require as many arguments. It requires
 you to use a `PUT` HTTP request though, and expects each column to be declared as a value/key pair in your body's request.
@@ -141,7 +106,7 @@ xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURICompo
 The `insert` operation will return the id of your inserted item, whatever that happens to be, or whatever the
 name of your id column happens to be.
 
-## Update operation
+### Update operation
 
 The `update` operation requires you to use a `POST` HTTP request. It requires one query parameter declaring
 which item you'de like to update, and all of its new values as part of the body of your request. Assuming
@@ -167,7 +132,7 @@ xhr.send(body);
 The above will update the `name` value for your `camphora.customers` database item with the id of 5, 
 and set its new value to _"John Doe"_.
 
-## Delete operation
+### Delete operation
 
 The `delete` operation requires you to use a `DELETE` HTTP method. It requires a single query parameter,
 declaring which column and value you wish to use as your `where` clause in your final SQL. To delete an item
@@ -181,6 +146,41 @@ xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
     alert(window.res.affected + ' items was successfully deleted');
+  }
+};
+xhr.send();
+```
+
+## Authentication
+
+Authentication is done by issuing a `POST` HTTP request towards the login module. If you're in JavaScript
+land for instance, you can login with something resembling the following.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('POST', '/hyper-core/login', true);
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    alert('Result of login operation was; ' + window.res.result);
+  }
+};
+var username = 'your_username';
+var password = 'your_password';
+xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
+```
+
+If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. Example
+can be found beneath.
+
+```
+var xhr = new XMLHttpRequest();
+xhr.open('DELETE', '/hyper-core/logout', true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState === 4) {
+    eval("window.res = " + xhr.responseText);
+    alert('Status; ' + window.res.status);
   }
 };
 xhr.send();
