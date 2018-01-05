@@ -1,4 +1,4 @@
-# An HTTP REST based MySQL ORM
+# A MySQL HTTP REST based ORM library (and more)
 
 Hyper Core is a back end for your web apps, built as a generic HTTP REST 
 web service. This allows you to build your front end, towards a mature, reusable, and secure back end, 
