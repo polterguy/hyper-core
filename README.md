@@ -82,7 +82,7 @@ _"where"_ declarations.
 * __[order-dir]__ - Can be either _'asc'_ or _'desc'_, and declares whether or not you'd like to order ascending or descending. Defaults to _'asc'_.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 250 items.
-* __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `OR`'ed together.
+* __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `AND`'ed together by default.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
 select only name and id columns, and sort descending by name, from your `camphora` database, and 
@@ -96,7 +96,7 @@ The above will return the first 10 records, but only the name and email columns,
 their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
 contain two components, separated by `:`. Below are the explanation for these components.
 
-* __operand__ - Operand to use for your clause. Can be `like`, `=`, `>=`, etc.
+* __operand__ - Operand to use for your clause. Can be `like`, `equal`, `not-equal`, `less-than`, `more-than`, `less-than-equal`, `more-than-equal`.
 * __value__ - Value to compare against.
 
 If you'd like to retrieve only items which have a `name` containing the string `%hansen%` for instance, 
