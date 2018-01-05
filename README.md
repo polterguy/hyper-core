@@ -40,12 +40,12 @@ all _"special parameter types"_, such as columns, requires square brackets surro
 This is to prevent these parameters from _"clashing"_ with your generic column
 _"where"_ declarations. The `select` operation requires you to use a GET HTTP request.
 
-* __[boolean]__ - Which boolean operator to use for multiple filter criteria. Defaults to `OR`.
 * __[columns]__ - Which columns you want to select, defaults to `*` (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
 * __[order-dir]__ - Can be either `asc` or `desc`, and declares whether or not you'd like to order ascending or descending. Defaults to `asc`.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 250 items.
+* __[boolean]__ - Which boolean operator to use for multiple filter criteria. Defaults to `OR`.
 * __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `AND`'ed together by default.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
@@ -100,7 +100,7 @@ the following code.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('PUT', '/hyper-core/mysql/camphora/customers/insert', true);
+xhr.open('PUT', '/hyper-core/mysql/database/table/insert', true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
@@ -128,7 +128,7 @@ you're in JavaScript land, you could update an item with something resembling th
 var id = 5;
 var name = 'John Doe';
 var xhr = new XMLHttpRequest();
-xhr.open('POST', '/hyper-core/mysql/camphora/customers/update?id=' + id, true);
+xhr.open('POST', '/hyper-core/mysql/database/table/update?id=' + id, true);
 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
@@ -141,19 +141,19 @@ var body = 'name=' + name;
 xhr.send(body);
 ```
 
-The above will update the `name` value for your `camphora.customers` database item with the id of 5, 
+The above will update the `name` value for your `database.table` database item having the id of 5, 
 and set its new value to _"John Doe"_.
 
 ### Delete operation
 
 The `delete` operation requires you to use a `DELETE` HTTP method. It requires a single query parameter,
 declaring which column and value you wish to use as your `where` clause in your final SQL. To delete an item
-in our above `camphora.customers` database, having the id of 5 for instance, could be accomplished with the following
+in our above `database.table` database, having the id of 5 for instance, could be accomplished with the following
 code, assuming you're in JavaScript land.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('DELETE', '/hyper-core/mysql/camphora/customers/delete?id=5', true);
+xhr.open('DELETE', '/hyper-core/mysql/database/table/delete?id=5', true);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
@@ -165,8 +165,11 @@ xhr.send();
 
 ## Authentication
 
-Authentication is done by issuing a `POST` HTTP request towards the login module. If you're in JavaScript
-land for instance, you can login with something resembling the following.
+There are also authentication end points, to login and logout a user, towards the p5.auth authentication/authorisation
+module in Phosphorus Five. This allows you to easily authenticate and authorise your users towards
+the user and role based auth system in Phosphorus Five. Authentication is done by issuing a `POST` HTTP 
+request towards the login module. If you're in JavaScript land for instance, you can login 
+with something resembling the following.
 
 ```
 var xhr = new XMLHttpRequest();
