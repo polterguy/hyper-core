@@ -165,7 +165,8 @@ xhr.send();
 
 ## Authentication
 
-There are also authentication end points, to login and logout a user, towards the p5.auth authentication/authorisation
+There are also authentication end points, to login and logout a user, towards the 
+[p5.auth](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth) authentication/authorisation
 module in Phosphorus Five. This allows you to easily authenticate and authorise your users towards
 the user and role based auth system in Phosphorus Five. Authentication is done by issuing a `POST` HTTP 
 request towards the login module. If you're in JavaScript land for instance, you can login 
