@@ -56,7 +56,7 @@ its `items` table - You can accomplish that with the following URL.
 /hyper-core/mysql/todo/items/select?[columns]=description,id&[order-by]=description&[order-dir]=desc
 ```
 
-The above will return the first 10 records, but only the `description` and `email` columns, and sort your results descending by
+The above will return the first 10 records, but only the `description` and `id` columns, and sort your results descending by
 their `description` column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
 contain two components, separated by `:`. Below are the explanation for these components.
 
