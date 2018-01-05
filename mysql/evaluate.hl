@@ -42,7 +42,7 @@ if:x:/@.args/*/operation?value
  * Invoking specific resolver for our given database operation.
  */
 eval-x:x:/+/*(/database|/table)
-micro.evaluate.file:@HYPER-CORE/database/{0}.hl
+micro.evaluate.file:@HYPER-CORE/mysql/{0}.hl
   :x:/@.args/*/operation?value
   database:x:/@.args/*/database?value
   table:x:/@.args/*/table?value

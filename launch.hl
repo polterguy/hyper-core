@@ -70,7 +70,7 @@ join:x:/@split/*?name
  *
  * Notice, at this point, the two main components of our [url] has been removed, the first one being
  * the folder for Hyper Core ("/hyper-core/" that is), and the second being the 
- * subfolder (e.g. "/database/") that is.
+ * subfolder (e.g. "/mysql/") that is.
  */
 eval-x:x:/+/*/url
 micro.evaluate.file:@HYPER-CORE/{0}/evaluate.hl
