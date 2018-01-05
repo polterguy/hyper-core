@@ -111,7 +111,7 @@ xhr.onreadystatechange = function() {
 var name = 'John Doe';
 var email = 'john@doe.com';
 
-// Notice, assumes you have a name and email column, in your customer table, in your camphora database.
+// Notice, assumes you have a name and email column, in your table table, in your database database.
 xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURIComponent (email);
 ```
 
@@ -209,7 +209,7 @@ Each operation, database, and table within your database, get its own unique URL
 Since Phosphorus Five allows you to grant or deny access to URLs according to which role your currently
 logged in user belongs to - This gives you a highly fine grained control over who are allowed to do what
 in regards to your SQL operations. To allow for instance all users, including _"guest"_ visitors, to for instance 
-evaluate `select` operations towards your above `camphora` database, and its `customers` table - But deny everybody 
+evaluate `select` operations towards your above `todo` database, and its `items` table - But deny everybody 
 except your _"developer"_ users to perform all other operations on the same database and table - You could create 
 an authorisation object that looks like the following.
 
@@ -217,21 +217,21 @@ an authorisation object that looks like the following.
 *
   p5.module.allow:/modules/hyper-core
 *
-  p5.hyper-core.allow:/hyper-core/mysql/camphora/customers/select
+  p5.hyper-core.allow:/hyper-core/mysql/todo/items/select
 developer
-  p5.hyper-core.allow:/hyper-core/mysql/camphora/customers
+  p5.hyper-core.allow:/hyper-core/mysql/todo/items
 ```
 
 The first record above, gives all users access to the module in general, which is necessary
-to have the core URL resolver in Phosphorus Five to even resolve the URL,
+to have the core URL resolver in Phosphorus Five even resolve the URL,
 and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
-all users access to do `select` operations on the `camphora` database, but only its `customers` table.
+all users access to do `select` operations on the `todo` database, but only its `items` table.
 The third record above, gives your `developer` users access to all operations on the
-`camphora` database, but only its `customers` table.
+`todo` database, but only its `items` table.
 
 All in all, the above three access control objects, gives your developer users complete control
-over the `camphora.customers` database, while random visitors have only `select` rights on the
-same database.
+over the `todo.items` database table, while random visitors have only `select` rights on the
+same database table.
 
 The default access control, unless explicitly overridden in your access control object, is 
 to **deny all operations on all databases and all tables**. So you'll need to explicitly grant
@@ -242,20 +242,6 @@ access for a role to be able to have that role do anything towards any database 
 First you'll have to [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
 clone or download Hyper Core, and make sure you put it inside of your Phosphorus Five folder structure, 
 at _"/core/p5.webapp/modules/"_.
-
-### Creating an example database
-
-To create an example database, you can install [Camphora Five](https://github.com/polterguy/camphora-five),
-which is actually most easily installed through the _"Bazar"_ in Phosphorus Five. You can also use
-existing MySQL databases. However, if you choose the latter, you must **edit your web.config**, and make sure you
-set the `p5.data.prefix` setting to an empty string. The example application, which can test out at
-for instance `http://127.0.0.1:8080/modules/hyper-core/samples/minimalistic-crud-example.html`, if you're
-on a locahost machine, expects a database called `camphora`, and a table called `foo`. If you use
-Camphora Five to create your test database, you'll need to create a Camphora Five app and name it `foo`.
-
-Alternatively, you can also of course edit the example code, to have it use another database,
-using for instance [Hyper IDE](https://github.com/polterguy/hyper-ide), which is bundled together with the main 
-download of Phosphorus Five.
 
 ## Warning
 
