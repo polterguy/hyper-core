@@ -24,7 +24,7 @@ Each of the above HTTP REST services follows the following URL format.
 ```
 
 If you have a database called e.g. `todo`, with a table called `items`, and you want to
-perform a `select` query towards it for instance, you can accomplish that with the following URL.
+perform a `select` query towards it for instance, you can use the following URL.
 
 ```
 /*
