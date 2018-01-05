@@ -1,13 +1,11 @@
 # A MySQL HTTP REST based ORM library (and more)
 
-Hyper Core is a back end for your web apps, built as a generic HTTP REST 
-web service. This allows you to build your front end, towards a mature, reusable, and secure back end, 
+Hyper Core is a MySQL ORM library, built as a generic HTTP REST web service.
+This allows you to build your front end, towards a mature, reusable, and secure back end, 
 that automatically takes care of common security issues, such as SQL insertion attacks, and
-authorisation and authentication - While at the same time getting to reuse pre-built generic 
-operations, such as CRUD operations, towards your MySQL database(s). It is a fairly new project, 
-and should be considered **ALPHA**. Hyper Core is built is 
-a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence obviously 
-depends upon Phosphorus Five to function.
+authorisation and authentication. Hyper Core is a 
+a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence requires
+you to use Phosphorus Five as the core.
 
 ## Authentication
 
