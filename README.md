@@ -23,14 +23,14 @@ Each of the above HTTP REST services follows the following URL format.
 /hyper-core/mysql/[database]/[table]/[operation]
 ```
 
-If you have a database called e.g. `camphora`, with a table called `customers`, and you want to
+If you have a database called e.g. `todo`, with a table called `items`, and you want to
 perform a `select` query towards it for instance, you can accomplish that with the following URL.
 
 ```
 /*
  * Optionally add QUERY parameters to create more complex SELECT queries.
  */
-/hyper-core/mysql/camphora/customers/select
+/hyper-core/mysql/todo/items/select
 ```
 
 ### Select operation
