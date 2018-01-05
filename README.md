@@ -40,7 +40,7 @@ all _"special parameter types"_, such as columns, requires square brackets surro
 This is to prevent these parameters from _"clashing"_ with your generic column
 _"where"_ declarations.
 
-* __[columns]__ - Which columns you want to select, defaults to "\*" (all columns).
+* __[columns]__ - Which columns you want to select, defaults to `*` (all columns).
 * __[order-by]__ - Which column you want to order your select query by. No default value.
 * __[order-dir]__ - Can be either _'asc'_ or _'desc'_, and declares whether or not you'd like to order ascending or descending. Defaults to _'asc'_.
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
