@@ -56,18 +56,18 @@ its `items` table - You can accomplish that with the following URL.
 /hyper-core/mysql/todo/items/select?[columns]=description,id&[order-by]=description&[order-dir]=desc
 ```
 
-The above will return the first 10 records, but only the name and email columns, and sort your results descending by
-their `name`column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
+The above will return the first 10 records, but only the `description` and `email` columns, and sort your results descending by
+their `description` column's value. All additional parameters becomes a part of the where clause to your SQL, and must all 
 contain two components, separated by `:`. Below are the explanation for these components.
 
-* __operand__ - Operand to use for your clause. Can be `like`, `equal`, `not-equal`, `less-than`, `more-than`, `less-than-equal`, `more-than-equal`.
+* __operand__ - Operand to use for your clause. Can be `like`, `equal`, `not-equal`, `less-than`, `more-than`, `less-than-equal`, or `more-than-equal`.
 * __value__ - Value to compare against.
 
-If you'd like to retrieve only items which have a `name` containing the string `%hansen%` for instance, 
+If you'd like to retrieve only items which have a `description` containing the string `%groceries%` for instance, 
 you could accomplish that with the following URL.
 
 ```
-/hyper-core/mysql/camphora/customers/select?name=like:%hansen%
+/hyper-core/mysql/todo/items/select?description=like:%groceries%
 ```
 
 **Important** - Remember to URL encode your URL!
@@ -77,8 +77,19 @@ This means that the following would select all items having either the firstname
 containing _"hansen"_. The `select` operation requires you to use a GET HTTP request.
 
 ```
-/hyper-core/mysql/camphora/customers/select?firstname=like:%john%&surname=like:%hansen%
+/hyper-core/mysql/database/table/select?firstname=like:%john%&surname=like:%hansen%
 ```
+
+If you wish to use the `and` boolean operator instead, you can explicitly override the boolean operator your MySQL
+queries are constructed with, by adding a `[boolean]` argument, and set its value to `and`. For the above query, this
+would resemble the following.
+
+```
+/hyper-core/mysql/database/table/select?firstname=like:%john%&surname=like:%hansen%&[boolean]=and
+```
+
+Tha above URL would fetch only items containing both the text _"john"_ in its firstname, and the value of _"hansen"_
+in its surname.
 
 ### Insert operation
 
