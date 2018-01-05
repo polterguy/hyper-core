@@ -38,7 +38,7 @@ perform a `select` query towards it for instance, you can use the following URL.
 The select operation takes the following optional parameters as HTTP query parameters. Notice,
 all _"special parameter types"_, such as columns, requires square brackets surrounding their names.
 This is to prevent these parameters from _"clashing"_ with your generic column
-_"where"_ declarations.
+_"where"_ declarations. The `select` operation requires you to use a GET HTTP request.
 
 * __[boolean]__ - Which boolean operator to use for multiple filter criteria. Defaults to `OR`.
 * __[columns]__ - Which columns you want to select, defaults to `*` (all columns).
@@ -74,7 +74,7 @@ you could accomplish that with the following URL.
 
 Notice, if you supply multiple additional query parameters, these will be `OR`'ed together in your select SQL.
 This means that the following would select all items having either the firstname containing _"john"_, or the surname 
-containing _"hansen"_. The `select` operation requires you to use a GET HTTP request.
+containing _"hansen"_.
 
 ```
 /hyper-core/mysql/database/table/select?firstname=like:%john%&surname=like:%hansen%
@@ -88,7 +88,7 @@ would resemble the following.
 /hyper-core/mysql/database/table/select?firstname=like:%john%&surname=like:%hansen%&[boolean]=and
 ```
 
-Tha above URL would fetch only items containing both the text _"john"_ in its firstname, and the value of _"hansen"_
+The above URL would fetch only items containing both the text _"john"_ in its firstname, and the value of _"hansen"_
 in its surname.
 
 ### Insert operation
