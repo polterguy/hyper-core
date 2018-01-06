@@ -206,7 +206,7 @@ URL `/hyper-core/mysql/todo/foo/x?description=bar` - The above
 will return JSON resembling the following to your client.
 
 ```json
-{"result":\`2\`}
+{"result":2}
 ```
 
 ## Authentication
