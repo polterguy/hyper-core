@@ -404,14 +404,16 @@ the user and role based auth system in Phosphorus Five. The main URL for this mo
 
 ### About the authentication system
 
-**Notice**, the authentication system in Hyper Core builds upon cookies. These are served such that
+**Notice**, the authentication system in Hyper Core builds upon HTTP cookies. These are served such that
 they are not accessible on the client (using JavaScript). This has many advantages, and some few disadvantages.
 The main advantage, is that the authentication process becomes **dead simple** for JavaScript/browser based
-authentication, and almost nothing the browser even have to even worry about, since the browser will
+authentication, and almost nothing you even have to even worry about, since the browser will
 automatically take care of handling these authentication cookies for you.
 
 However, for other types of clients, it requires that you are able to store the cookies returned
-from the server, and re-transmit them upon consecutive requests, as a _"user ticket"_.
+from the server, and re-transmit them upon consecutive requests, as a _"user ticket"_. All in all though,
+this authentication process, is orders of magnitudes more easy to implement yourself, than stuff such as OAUTH(2),
+etc - Even for thick clients, if that is what you are using to access Hyper Core.
 
 ### Logging in
 
