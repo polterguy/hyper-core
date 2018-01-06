@@ -53,14 +53,14 @@ eval-x:x:/+/*
 p5.web.post.list
 p5.web.post.get:x:/@p5.web.post.list/*?name
 add:x:/@.args/*/params
-  src:x:/@p5.web.post.get/*
+  src:x:/@p5.web.post.get/*(!/=)
 if:x:/@.args/*/params/*
   not
   set:x:/@.args/*/params
 p5.web.query.list
 p5.web.query.get:x:/@p5.web.query.list/*?name
 add:x:/@.args/*/query
-  src:x:/@p5.web.query.get/*
+  src:x:/@p5.web.query.get/*(!/=)
 if:x:/@.args/*/query/*
   not
   set:x:/@.args/*/query

@@ -237,6 +237,30 @@ would imply returning simply the value of the **[p5.mysql.delete]** or **[p5.mys
 For a **[p5,mysql.insert]** invocation, the id of the last inserted item, can be found as an **[id]** node
 child of your insert event invocation.
 
+#### Mandatory arguments
+
+You can create an extension method that requires one or more arguments to be supplied, and if they aren't, 
+it will throw an exception. To do this, you'll have to invoke the **[micro.lambda.contract.min]** event, 
+passing in the root node, and a list of mandatory arguments, and their type(s), in your extension method implementation.
+Below is an example of a method that requires the client to having pass in a `description` argument as a string, 
+and if he hasn't, or the description is empty, it will throw an exception.
+
+```
+/*
+ * This line will throw an exception, if the client did not pass
+ * in a "description" query parameter, or the "description" query parameter
+ * was empty for some reasons.
+ */
+micro.lambda.contract.min:x:/..
+  query
+    description:string
+
+p5.mysql.select:select * from items where description like @description
+  @description:%{0}%
+    :x:/../*/query/*/description?value
+return:x:/@p5.mysql.select/*
+```
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
