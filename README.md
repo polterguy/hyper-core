@@ -513,9 +513,9 @@ can be changed as you see fit. Sliding expirations are also supported.
 
 **Notice**, our above example could in theory have multiples clients doing a lookup at the same time
 for the same item. To modify it such that only one client will invoke Google Translate, you'll need
-to use a **[read-lock]** while checking the cache, and a **[write-lock]** while writing to the cache.
-Yet again, this is beyond the scope of this document. Shoot me an email at thomas@gaiasoul.com if you'd
-like for me to write a blog, with an example of how to do this though.
+to use a **[read-lock]** while checking the cache, and a **[write-lock]** while writing to the cache,
+to synchronise access to your cache. Yet again, this is beyond the scope of this document. Shoot me 
+an email at thomas@gaiasoul.com if you want me to write an article for you, with an example of how to do this.
 
 ## Authentication and authorisation
 
