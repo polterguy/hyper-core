@@ -305,10 +305,9 @@ p5.mysql.select:select * from items where description like @description
  * Iterating through each item, and invoking Google Translate for its "description",
  * updating the above item with the results returned from Google Translate.
  *
- * WARNING, this will take a LOT of time, if you have a huge result set
- * returned from your above SQL.
+ * WARNING, this will take a LOT of time, if you have a huge result set returned from your above SQL.
  * It is simply an **EXAMPLE** of how to use Hyperlambda, and not something you should
- * use in production code, due to that it creates one HTTP request, towards Google Translate,
+ * use in production code, due to that it creates one HTTP request towards Google Translate,
  * for each item returned from our above SQL.
  */
 for-each:x:/@p5.mysql.select/*
