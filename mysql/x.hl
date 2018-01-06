@@ -33,7 +33,7 @@ micro.lambda.contract.min:x:/..
  */
 if
   fetch:x:/0/0?value
-    file-exists:/common/documents/private/hyper-core/mysql/x/{0}.hl
+    file-exists:/common/documents/private/hyper-core/x/{0}.hl
       :x:/../*/table?value
   not
   p5.web.response.set-status-code:404
@@ -71,7 +71,7 @@ if:x:/@.args/*/query/*
  */
 add:x:/../*/micro.evaluate.file
   src:x:/@.args/*
-micro.evaluate.file:/common/documents/private/hyper-core/mysql/x/{0}.hl
+micro.evaluate.file:/common/documents/private/hyper-core/x/{0}.hl
   :x:/../*/table?value
 
 
