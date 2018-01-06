@@ -1,0 +1,8 @@
+/*
+ * File responsible for invoking our extension methods without any MySQL database open.
+ */
+split:x:/../*/url?value
+  =:/
+eval-x:x:/+/*
+micro.evaluate.file:@HYPER-CORE/mysql/x.hl
+  table:x:/@split/0?name
