@@ -265,6 +265,10 @@ p5.mysql.select:select * from items where description like @description
 return:x:/@p5.mysql.select/*
 ```
 
+You can of course require an argument to be supplied that is convertible into for instance a `double` or
+an `int` too. If you wish to do that, simply replace the above `description:string` with e.g. `foo:int`, or
+whatever type you want your argument to be possible to convert into.
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
