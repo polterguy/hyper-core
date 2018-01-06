@@ -201,12 +201,12 @@ value.
 
 ### Logging out
 
-If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. An example
-can be found beneath.
+If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. This will destroy
+the authentication cookie on the client. An example can be found beneath.
 
 ```
 var xhr = new XMLHttpRequest();
-xhr.open('DELETE', '/hyper-core/logout', true);
+xhr.open('DELETE', '/hyper-core/auth/logout', true);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
@@ -224,8 +224,12 @@ can be done by issuing an HTTP `GET` request towards the `whoami` module. This w
 of the client. An example can be found below.
 
 ```
-/hyper-core/whoami
+/hyper-core/auth/whoami
 ```
+
+**Notice**, the authentication cookie is not accessible on the client, since this would open up for a whole range
+of different types of attacks, such as _"session highjacking"_, etc. Hence the only way to get information from the
+client about the status of your client, is by issuing a `whoami` HTTP request towards the server.
 
 ### Authorisation objects
 
