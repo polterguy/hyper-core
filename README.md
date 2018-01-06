@@ -365,6 +365,10 @@ the following `/hyper-core/mysql/todo/foo/x`, and it would return the following 
 {"result":42}
 ```
 
+You can of course mix all concepts discussed here under the extension methods as you see fit, and have any amount
+of Hyperlambda, SQL, and/or C# perfectly mixed together, as you see fit, creating any types of extension methods
+you want to create.
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
