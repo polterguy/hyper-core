@@ -510,6 +510,12 @@ access to the authentication file, etc. All in all, Hyper Core should for all pr
 be orders of magnitudes more secure, than most things you could possibly build yourself - Assuming
 you don't do something really stupid yourself, such as concatenating SQL parameters into your SQL
 in your own extension methods, instead of using the SQL paremeter collection objects, etc.
+Below is a list of some of the more important security features in Hyper Core.
+
+* Highly secure role based access control
+* Passwords stored securely
+* Easy to create and maintain existing users through Peeples
+* SQL injection attack prevention
 
 ## Installation
 
