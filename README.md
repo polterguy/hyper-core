@@ -361,7 +361,7 @@ return:x:/@foo-bar.my-event?value
 If you invoked the above extension method, the client would retrieve the following from your HTTP end point.
 
 ```json
-{"result":`Hello from C#`}
+{"result":"Hello from C#"}
 ```
 
 ## Authentication
