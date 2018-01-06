@@ -487,7 +487,7 @@ and not on the HTTP request itself.
 
 This makes it possible to do things with Hyper Core, that is difficult to even imagine doing with
 other types of similar framework, built entirely stateless - Simply since you **can** (if you wish) 
-choose to store state, in temporary objects, om the server, improving the execution time of your
+choose to store state, in temporary objects, on the server, improving the execution time of your
 requests from 1.2 seconds, to 0.076 seconds.
 
 You can also cache things on a per user basis, using the **[p5.web.session]** event instead, in addition
@@ -498,7 +498,18 @@ of this document is, and the scope of learning Hyperlambda in general. Hence, th
 for you to figure out yourself, if you wish to dive deeper into this subject.
 
 Just put this at the back of your mind, that Hyper Core can **cache things on the server side, on a per
-object basis** - And hence arguably, has aninternal _"memcache"_ implementation.
+object basis** - And hence arguably, has an internal _"memcache"_ implementation.
+
+**Notice**, it may be tempting to argue now, at this point, that the client could translate the
+items itself. Eliminating the need for any server-side state. However, this simply offloads the server,
+while making the client execute poorly, since it'll have to do the Google Translate invocations for
+each item, before it can render its UI. Our above _"cache"_ solution, would only go towards Google Translate
+every time it encounters a `description` it has not previously encountered, while for every consecutive
+request, it would simply return the cached value. Making all clients, except one initial HTTP request
+per search query, perform blistering fast.
+
+Also notice that the default timeout for the cache object in Hyperlambda is 30 minutes, but this
+can be changed as you see fit. Sliding expirations are also supported.
 
 ## Authentication and authorisation
 
