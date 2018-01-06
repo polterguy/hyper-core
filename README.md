@@ -500,6 +500,17 @@ The default access control, unless explicitly overridden in your access control 
 to **deny all operations on all databases and all tables**. So you'll need to explicitly grant
 access for a role to be able to have that role do anything towards any database in your system.
 
+## Security
+
+All of the common pitfalls in regards to SQL and security are simply automatically taken care of
+for you in Hyper Core. An example is SQL injection attacks, which are completely eliminated.
+Another example is how it builds upon the Phosphorus Five authentication/authorization mechanisms,
+providing excellent security for you, by for instance salting and hashing passwords, and denying
+access to the authentication file, etc. All in all, Hyper Core should for all practical concerns,
+be orders of magnitudes more secure, than most things you could possibly build yourself - Assuming
+you don't do something really stupid yourself, such as concatenating SQL parameters into your SQL
+in your own extension methods, instead of using the SQL paremeter collection objects, etc.
+
 ## Installation
 
 Hyper Core has not yet been released, which means that if you want to test it, you'll have to
