@@ -470,7 +470,7 @@ and you access your above extension method, using a URL such as for instance the
 /hyper-core/mysql/todo/foo/x?description=foo
 ```
 
-The the first time you request that URL, it will probably spend several seconds responding, since it'll
+The first time you request the above URL, it will probably spend several seconds responding, since it'll
 have to internally create 4 HTTP requests towards Google Translate, before it can return your data.
 However, all consecutive requests, also those with different search criteria, but still returning the
 same items - Will be much faster, since they can simply lookup the translated item from the cache,
@@ -490,9 +490,12 @@ other types of similar framework, built entirely stateless - Simply since you **
 choose to store state, in temporary objects, om the server, improving the execution time of your
 requests from 1.2 seconds, to 0.076 seconds.
 
-You can also cache things on a per user basis, using the **[p5.web.session]** event instead, but we are
-now moving into what is borderline in regards to what the scope of this document is, and the scope of 
-learning Hyperlambda in general.
+You can also cache things on a per user basis, using the **[p5.web.session]** event instead, in addition
+to that for our above example, we could create one **[fork]** lambda object for each Google Translate
+lookup, wrapped inside of a single **[wait]** lambda, to make all initial 4 requests being executed
+in asynchronously, etc - But we are now moving into what is borderline in regards to what the scope 
+of this document is, and the scope of learning Hyperlambda in general. Hence, that'll be an excersize
+for you to figure out yourself, if you wish to dive deeper into this subject.
 
 Just put this at the back of your mind, that Hyper Core can **cache things on the server side, on a per
 object basis** - And hence arguably, has aninternal _"memcache"_ implementation.
