@@ -223,13 +223,13 @@ p5.mysql.select:select * from items where description like @description
 return:x:/@p5.mysql.select/*
 ```
 
+The above would return JSON resembling the following to your client.
+
 ```json
 [{"id":2,"description":"bar"},{"id":3,"description":"hello"},
 {"id":4,"description":"foo 2"},{"id":6,"description":"bar 3"},
 {"id":7,"description":"bar 4"},{"id":9,"description":"XYS"}]
 ```
-
-The above would return JSON resembling the following to your client.
 
 ## Authentication
 
