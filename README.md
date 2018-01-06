@@ -350,8 +350,8 @@ is called `foo`.
 <add assembly="foo" />
 ```
 
-If you do the above, you can actually invoke your C# method from an extension method, doing something
-resembling the following.
+If you do the above, you can actually invoke your C# method from an extension method, by for instance changing
+our above _"foo.hl" file to something resembling the following.
 
 ```
 foo-bar.my-event
@@ -359,6 +359,8 @@ return:x:/@foo-bar.my-event?value
 ```
 
 If you invoked the above extension method, the client would retrieve the following from your HTTP end point.
+For the record, assuming you modified our above _"foo.hl" file, the URL to invoke your C# code would become
+the following `/hyper-core/mysql/todo/foo/x`, and it would return the following JSON.
 
 ```json
 {"result":42}
