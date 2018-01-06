@@ -53,15 +53,20 @@ if
 
 
 /*
- * Opening our database connection.
+ * Opening our database connection, and invoking method, making sure we wrap
+ * our lambda in a try/catch block.
  */
-p5.mysql.connect:[{0}]
-  :x:/@.args/*/database?value
+try
+  p5.mysql.connect:[{0}]
+    :x:/@.args/*/database?value
 
-  /*
-   * Invoking specific resolver for our given database operation.
-   */
-  eval-x:x:/+/*/table
-  micro.evaluate.file:@HYPER-CORE/mysql/{0}.hl
-    :x:/@.args/*/operation?value
-    table:x:/@.args/*/table?value
+    /*
+     * Invoking specific resolver for our given database operation.
+     */
+    eval-x:x:/+/*/table
+    micro.evaluate.file:@HYPER-CORE/mysql/{0}.hl
+      :x:/@.args/*/operation?value
+      table:x:/@.args/*/table?value
+catch
+  p5.web.response.set-status-code:400
+  p5.web.echo:x:/@message?value

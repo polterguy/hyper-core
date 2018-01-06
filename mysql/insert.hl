@@ -27,7 +27,9 @@ micro.lambda.contract.min:x:/..
 p5.web.request.get-method
 if:x:/@p5.web.request.get-method?value
   !=:PUT
-  throw:This REST service requires you to use a PUT HTTP method for your request.
+  p5.web.response.set-status-code:405
+  p5.web.echo:This URL requires a PUT HTTP method
+  return
 
 
 /*
