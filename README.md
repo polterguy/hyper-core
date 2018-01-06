@@ -461,7 +461,7 @@ the username and the role of the client, if he is logged in. An example can be f
 If the user is not logged in, the above will return the guest username and role, which defaults to _"guest"_.
 
 **Notice**, the authentication cookie is not accessible on the client, since this would open up for a whole range
-of different types of attacks, such as _"session highjacking"_, etc. Hence the only way to get information from the
+of different types of attacks, such as _"session highjacking"_, etc. Hence, the only way to get information from the
 client about the status of your client, is by issuing a `whoami` HTTP request towards the server.
 
 ### Authorisation objects
@@ -489,7 +489,8 @@ to have the core URL resolver in Phosphorus Five even resolve the URL,
 and pass the request control onwards to the _"hyper-core"_ module. The second record, grants 
 all users access to do `select` operations on the `todo` database, but only its `items` table.
 The third record above, gives your `developer` users access to all operations on the
-`todo` database, but only its `items` table.
+`todo` database, but only its `items` table. Since the default behaviour is to deny access, 
+everything else is denied for everyone, except root users, which have access to do everything.
 
 All in all, the above three access control objects, gives your developer users complete control
 over the `todo.items` database table, while random visitors have only `select` rights on the
