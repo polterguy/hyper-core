@@ -158,7 +158,7 @@ xhr.open('DELETE', '/hyper-core/mysql/database/table/delete?id=5', true);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
-    alert(window.res.affected + ' items was successfully deleted');
+    alert(window.res.affected_records + ' items was successfully deleted');
   }
 };
 xhr.send();

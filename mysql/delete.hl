@@ -159,5 +159,5 @@ p5.mysql.connect:[{0}]
   /*
    * Returning JSON to caller implying how many records were affected.
    */
-  p5.web.echo:@"{{""affected"":""{0}""}}"
+  p5.web.echo:@"{{""affected_records"":""{0}""}}"
     :x:/@p5.mysql.delete?value
