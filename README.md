@@ -317,7 +317,7 @@ for-each:x:/@p5.mysql.select/*
     src:x:/@micro.google.translate?value
 
 /*
- * Returning our items, now with the description in Norwegian instead of English.
+ * Returning our items, now with the description in Norwegian.
  */
 return:x:/@p5.mysql.select/*
 ```
@@ -332,7 +332,7 @@ small and simple, we didn't implement that in our above example.
 You can also create extension methods as CLR methods if you want to. This is easily accomplished by creating 
 a new library type of .Net/Mono project, and add a reference to the project called _"p5.core"_, for then
 to create a static C# method, in one of your classes, and mark it with the attribute `ActiveEvent`.
-Below is an example of some C# code that would do just that for you.
+Below is an example of some C# code that would do this for you.
 
 ```csharp
 using System;
@@ -348,7 +348,7 @@ class Foo
 }
 ```
 
-Then you'll need to reference the assembly containing the above class into your main _"p5.webapp"_ project,
+You'll need to reference the assembly containing the above class into your main _"p5.webapp"_ project,
 for then to edit your _"web.config"_ file, to include your assembly as a plugin, by adding another `add` entry
 into your `assemblies` configuration. Below is an example of how to accomplish this, assuming your assembly
 is called `foo`.
@@ -358,7 +358,7 @@ is called `foo`.
 ```
 
 If you do the above, you can actually invoke your C# method from an extension method, by for instance changing
-our above _"foo.hl"_ file to something resembling the following.
+your above _"foo.hl"_ file to something resembling the following.
 
 ```
 foo-bar.my-event
@@ -447,16 +447,18 @@ xhr.onreadystatechange = function() {
 xhr.send();
 ```
 
-### whoami, figuring out you're status
+### whoami, figuring out your status
 
 Since the default authentication of Phosphorus Five allows a client to persist his logged in status in a cookie on disc,
 it is sometimes necessary to query towards the back end, to find out the authentication status of the client. This
-can be done by issuing an HTTP `GET` request towards the `whoami` module. This will return the username and the role
-of the client. An example can be found below.
+can be done by issuing an HTTP `GET` request towards the `whoami` submodule of the _"auth"_ module. This will return 
+the username and the role of the client, if he is logged in. An example can be found below.
 
 ```
 /hyper-core/auth/whoami
 ```
+
+If the user is not logged in, the above will return the guest username and role, which defaults to _"guest"_.
 
 **Notice**, the authentication cookie is not accessible on the client, since this would open up for a whole range
 of different types of attacks, such as _"session highjacking"_, etc. Hence the only way to get information from the
