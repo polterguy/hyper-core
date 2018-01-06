@@ -512,10 +512,16 @@ you don't do something really stupid yourself, such as concatenating SQL paramet
 in your own extension methods, instead of using the SQL paremeter collection objects, etc.
 Below is a list of some of the more important security features in Hyper Core.
 
-* Highly secure role based access control
+* Highly secure and flexible role based access control
 * Passwords stored securely
 * Easy to create and maintain existing users through Peeples
 * SQL injection attack prevention
+* Protects the code for your own extension methods from being seen
+* Persists cookies safely on the client, such that session highjacking becomes impossible
+
+The above traits combined, allows you to store your business logic entirely on the server, eliminating
+a whole range of security issues, such as malicious attackers modifies your JavaScript, and 
+completely bypass your security implementations.
 
 ## Installation
 
