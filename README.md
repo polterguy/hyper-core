@@ -196,7 +196,7 @@ Below is an example of a file that executes a `count` SQL on your `items` table,
 parametrised with a query parameter, filtering the `description` of the records it should count.
 
 ```
-p5.mysql.scalar:select * from items where description like @description
+p5.mysql.scalar:select count(*) from items where description like @description
   @description:x:/../*/query/*/description?value
 return:x:/@p5.mysql.scalar?value
 ```
