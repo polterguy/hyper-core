@@ -351,7 +351,7 @@ is called `foo`.
 ```
 
 If you do the above, you can actually invoke your C# method from an extension method, by for instance changing
-our above _"foo.hl" file to something resembling the following.
+our above _"foo.hl"_ file to something resembling the following.
 
 ```
 foo-bar.my-event
