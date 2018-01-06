@@ -242,7 +242,7 @@ child of your insert event invocation.
 You can create an extension method that requires one or more arguments to be supplied, and if they aren't, 
 it will throw an exception. To do this, you'll have to invoke the **[micro.lambda.contract.min]** event, 
 passing in the root node, and a list of mandatory arguments, and their type(s), in your extension method implementation.
-Below is an example of a method that requires the client to having pass in a `description` argument as a string, 
+Below is an example of a method that requires the client to having pass in a `description` query argument as a string, 
 and if he hasn't, or the description is empty, it will throw an exception.
 
 ```
@@ -267,7 +267,51 @@ return:x:/@p5.mysql.select/*
 
 You can of course require an argument to be supplied that is convertible into for instance a `double` or
 an `int` too. If you wish to do that, simply replace the above `description:string` with e.g. `foo:int`, or
-whatever type you want your argument to be possible to convert into.
+whatever name/type you want your argument to be possible to convert into.
+
+#### About Hyperlambda
+
+The above extension methods are actually created using Hyperlambda. Although for most practical concerns, you
+don't really have to worry about this, since for the most parts you will be creating very simple extension methods,
+simply invoking a MySQL active event - Hyperlambda is actually a fully fledged programming language, which
+is Turing complete, and allows you to do much more advanced stuff, than what we are doing above.
+
+For most practical concerns, this won't be an issue, since you'll probably simply invoke a couple of MySQL
+Active Events in your code, and return its results - Realise that you can still do some pretty amazing stuff
+with Hyperlambda, using more of its feature set. Let's create a thought experiment, imagining that we would for
+instance like to translate the description of our items into Norwegian, before we return them to the client.
+This is in fact easily accomplished using Hyperlambda, by invoking an Active Event from Micro, which allows
+us to invoke Google Translate. Below is an example of doing just that.
+
+```
+/*
+ * Running our SQL select query.
+ */
+p5.mysql.select:select * from items where description like @description
+  @description:%{0}%
+    :x:/../*/query/*/description?value
+
+/*
+ * Iterating through each item, and invoking Google Translate for its "description",
+ * updating the above item with the results returned from Google Translate.
+ *
+ * WARNING, this will take a LOT of time, if you have a huge result set
+ * returned from your above SQL.
+ * It is simply an **EXAMPLE** of how to use Hyperlambda, and not something you should
+ * use in production code, due to that it creates one HTTP request, towards Google Translate,
+ * for each item returned from our above SQL.
+ */
+for-each:x:/@p5.mysql.select/*
+  micro.google.translate:x:/@_dp/#/*/description?value
+    dest-lang:nb-NO
+  set:x:/@_dp/#/*/description?value
+    src:x:/@micro.google.translate?value
+
+/*
+ * Returning our items, now with the description in Norwegian instead of English.
+ */
+return:x:/@p5.mysql.select/*
+```
 
 ## Authentication
 
