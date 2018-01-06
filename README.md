@@ -181,7 +181,7 @@ down in this document how to create.
 
 Often times the above 4 basic CRUD operations simply won't cut it for you. Maybe you want to perform a join on
 multiple tables for instance? Or you want to add more complex conditions than the above allows you to? Or maybe
-you need to insert into multiple tables during one invocation, wrapping your SQL in a transaction? For such 
+you need to insert into multiple tables during one invocation, wrapping your SQLs in a database transaction? For such 
 times, there is the `x` method. The `x` method doesn't take a table name as its second parameter. Instead it requires
 the name, to your extension method, which you'll need to supply as a Hyperlambda file, inside
 of your _"/common/documents/private/hyper-core/x/"_ folder. If you have a file called for instance
@@ -253,8 +253,8 @@ child of your insert event invocation.
 
 You can create an extension method that requires one or more arguments to be supplied, and if they aren't, 
 it will throw an exception. To do this, you'll have to invoke the **[micro.lambda.contract.min]** event, 
-passing in the root node, and a list of mandatory arguments, and their type(s), in your extension method implementation.
-Below is an example of a method that requires the client to having pass in a `description` query argument as a string, 
+passing in the root node, and a list of mandatory arguments, and their type(s), in your extension method's implementation.
+Below is an example of a method that requires the client to pass in a `description` query argument as a string, 
 and if he hasn't, or the description is empty, it will throw an exception.
 
 ```
@@ -285,7 +285,7 @@ whatever name/type you want your argument to be possible to convert into.
 
 The above extension methods are actually created using Hyperlambda. Although for most practical concerns, you
 don't really have to worry about this, since for the most parts you will be creating very simple extension methods,
-simply invoking a MySQL active event - Hyperlambda is actually a fully fledged programming language, which
+simply invoking a MySQL active event. However, Hyperlambda is actually a fully fledged programming language, which
 is Turing complete, and allows you to do much more advanced stuff, than what we are doing above.
 
 For most practical concerns, this won't be an issue, since you'll probably simply invoke a couple of MySQL
