@@ -50,6 +50,7 @@ eval-x:x:/+/*
   method:x:/@p5.web.request.get-method?value
   query
   params
+  headers
 p5.web.post.list
 p5.web.post.get:x:/@p5.web.post.list/*?name
 add:x:/@.args/*/params
@@ -58,6 +59,10 @@ p5.web.query.list
 p5.web.query.get:x:/@p5.web.query.list/*?name
 add:x:/@.args/*/query
   src:x:/@p5.web.query.get/*
+p5.web.header.list
+p5.web.header.get:x:/@p5.web.header.list/*?name
+add:x:/@.args/*/headers
+  src:x:/@p5.web.header.get/*
 
 
 /*
@@ -65,6 +70,10 @@ add:x:/@.args/*/query
  */
 add:x:/../*/micro.evaluate.file
   src:x:/@.args/*
+create-widget
+  element:pre
+  innerValue:x:/..
+return
 micro.evaluate.file:/common/documents/private/hyper-core/mysql/x/{0}.hl
   :x:/../*/table?value
 

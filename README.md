@@ -180,7 +180,7 @@ the following.
 /hyper-core/mysql/todo/foo/x
 ```
 
-The above URL will evaluate your _"/common/document/private/hyper-core/mysql/x/foo.hl"_ file.
+The above URL will evaluate your _"/common/documents/private/hyper-core/mysql/x/foo.hl"_ file.
 This file will be evaluated with all the relevant information from your HTTP request, having been automatically
 decorated for you. Below is an example of how your file invocation might be decorated.
 
@@ -190,6 +190,12 @@ params
   some-url-encoded-parameter:foo
 query
   some-query-parameter:bar
+headers
+  Content-Type:application/x-www-form-urlencoded
+
+  /*
+   * All other headers here ...
+   */
 ```
 
 This allows you to easily reference any parts of the HTTP request, and its decoration, as you see fit.
