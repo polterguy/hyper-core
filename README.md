@@ -231,6 +231,12 @@ The above would return JSON resembling the following to your client.
 {"id":7,"description":"bar 4"},{"id":9,"description":"XYS"}]
 ```
 
+If you create an extension method that does an `insert`, `update`, or `delete` operation, it is considered
+to be good practice to return the results of the operation to the client. For `update` and `delete`, this
+would imply returning simply the value of the **[p5.mysql.delete]** or **[p5.mysql.update]** invocation.
+For a **[p5,mysql.insert]** invocation, the id of the last inserted item, can be found as an **[id]** node
+child of your insert event invocation.
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
