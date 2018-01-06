@@ -27,7 +27,6 @@
  * Sanity checking arguments.
  */
 micro.lambda.contract.min:x:/..
-  database:string
   table:string
 
 
@@ -41,327 +40,335 @@ if:x:/@p5.web.request.get-method?value
 
 
 /*
- * Opening up our database connection, and evaluating our select SQL statement, echoing the results
- * to the client as JSON.
+ * First retrieving our columns, making sure we guard against SQL insertion attacks.
  */
-p5.mysql.connect:[{0}]
-  :x:/../*/database?value
+.defaults
+  [columns]:*
+p5.web.query.get:[columns]
+.cols
+
+
+/*
+ * Splitting each column name, which should be separated by "," 
+ * and looping through each column name, and wrapping it inside of
+ * a pair of backticks (`), to support "funny column names".
+ */
+split:x:(/@p5.web.query.get/*|/@.defaults/*)/$?value
+  =:,
+for-each:x:/@split/*?name
 
   /*
-   * First retrieving our columns, making sure we guard against SQL insertion attacks.
+   * Making sure we guard against SQL isertion attacks on column's name.
    */
-  .defaults
-    [columns]:*
-  p5.web.query.get:[columns]
-  .cols
-
-  /*
-   * Splitting each column name, which should be separated by "," 
-   * and looping through each column name, and wrapping it inside of
-   * a pair of backticks (`), to support "funny column names".
-   */
-  split:x:(/@p5.web.query.get/*|/@.defaults/*)/$?value
-    =:,
-  for-each:x:/@split/*?name
-
-    /*
-     * Making sure we guard against SQL isertion attacks on column's name.
-     */
-    replace:x:/@_dp?value
-      src:`
-      dest:\`
-    set:x:/@.cols?value
-      src:{0},`{1}`
-        :x:/@.cols?value
-        :x:/@replace?value
-
-  /*
-   * Trimming excessive "," characters in the beginning of our column declaration.
-   */
-  trim-left:x:/@.cols?value
-    chars:,
-
-  /*
-   * Now we know which columns client requests, in addition to our table name.
-   *
-   * Making sure we don't allow for SQL insertion attacks on the table name first though.
-   */
-  replace:x:/../*/table?value
+  replace:x:/@_dp?value
     src:`
     dest:\`
-  eval-x:x:/+
-  .sql:select {0} from `{1}`
-    :x:/@trim-left?value
-    :x:/@replace?value
+  set:x:/@.cols?value
+    src:{0},`{1}`
+      :x:/@.cols?value
+      :x:/@replace?value
+
+
+/*
+ * Trimming excessive "," characters in the beginning of our column declaration.
+ */
+trim-left:x:/@.cols?value
+  chars:,
+
+
+/*
+ * Now we know which columns client requests, in addition to our table name.
+ *
+ * Making sure we don't allow for SQL insertion attacks on the table name first though.
+ */
+replace:x:/../*/table?value
+  src:`
+  dest:\`
+eval-x:x:/+
+.sql:select {0} from `{1}`
+  :x:/@trim-left?value
+  :x:/@replace?value
+
+
+/*
+ * Then retrieving what operator to use, defaulting to "or".
+ *
+ * Making sure we only accept something that's logically legal, 
+ * and doesn't produce an SQL insertion attack.
+ */
+.boolean
+set:x:/@.boolean?value
+  eval
+    p5.web.query.get:[boolean]
+    if:x:/@p5.web.query.get/*?value
+      =:and
+      return:and
+    return:or
+
+
+/*
+ * Further parametrising our SQL according to GET QUERY parameters supplied by client.
+ */
+.no:int:0
+p5.web.query.list
+for-each:x:/@p5.web.query.list/*?name
 
   /*
-   * Then retrieving what operator to use, defaulting to "or".
-   *
-   * Making sure we only accept something that's logically legal, 
-   * and doesn't produce an SQL insertion attack.
+   * Since we have 5 "special parameters", we'll need to check for these, before
+   * we allow for our "generic parameter logic" to kick in, and do its thing.
    */
-  .boolean
-  set:x:/@.boolean?value
-    eval
-      p5.web.query.get:[boolean]
-      if:x:/@p5.web.query.get/*?value
-        =:and
-        return:and
-      return:or
-
-  /*
-   * Further parametrising our SQL according to GET QUERY parameters supplied by client.
-   */
-  .no:int:0
-  p5.web.query.list
-  for-each:x:/@p5.web.query.list/*?name
+  switch:x:/@_dp?value
 
     /*
-     * Since we have 5 "special parameters", we'll need to check for these, before
-     * we allow for our "generic parameter logic" to kick in, and do its thing.
+     * Ignoring [offset], [limit], [columns], [order-by] and [order-dir],
+     * since they're handled further down.
      */
-    switch:x:/@_dp?value
+    case:[boolean]
+    case:[columns]
+    case:[offset]
+    case:[limit]
+    case:[order-by]
+    case:[order-dir]
+
+      // To avoid fall through to default, we need some lambda here.
+      .foo
+
+    default
 
       /*
-       * Ignoring [offset], [limit], [columns], [order-by] and [order-dir],
-       * since they're handled further down.
+       * Appending either "where" or "and" to our SQL, depending upon whether or
+       * not this our first [for-each] iteration, implying the first parameter we
+       * add to our SQL.
        */
-      case:[boolean]
-      case:[columns]
-      case:[offset]
-      case:[limit]
-      case:[order-by]
-      case:[order-dir]
-
-        // To avoid fall through to default, we need some lambda here.
-        .foo
-
-      default
+      if:x:/@.no?value
+        =:int:0
 
         /*
-         * Appending either "where" or "and" to our SQL, depending upon whether or
-         * not this our first [for-each] iteration, implying the first parameter we
-         * add to our SQL.
-         */
-        if:x:/@.no?value
-          =:int:0
-
-          /*
-           * First generic parameter, making sure we add a "where" clause.
-           */
-          set:x:/@.sql?value
-            src:{0} where
-              :x:/@.sql?value
-
-        else
-
-          /*
-           * Not the first parameter, hence we add our operator part.
-           */
-          set:x:/@.sql?value
-            src:{0} {1}
-              :x:/@.sql?value
-              :x:/@.boolean?value
-
-        /*
-         * Retrieving operand and value of our QUERY parameter, and handling it accordingly.
-         */
-        p5.web.query.get:x:/@_dp?value
-
-        /*
-         * Splitting query value to get "operand", and "value".
-         */
-        split:x:/@p5.web.query.get/*?value
-          =:":"
-
-        /*
-         * Retrieving our "operand", and removing it from the above
-         * [split] results afterwards.
-         */
-        eval-x:x:/+
-        .operand:x:/@split/0?name
-        set:x:/@split/0
-
-        /*
-         * In case "value" parts contains a ":", there will more than one
-         * remaining item in above [split] result now, at which point we'll
-         * need to join them with ":" being our [sep] character.
-         */
-        join:x:/@split/*?name
-          sep:":"
-
-        /*
-         * Sanity checking "operand", by making sure it's an operand that
-         * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
-         *
-         * TODO: Check up that we add all operands that MySQL supports.
-         */
-        switch:x:/@.operand?value
-          case:equal
-            set:x:/@.operand?value
-              src:=
-          case:not-equal
-            set:x:/@.operand?value
-              src:!=
-          case:more-than
-            set:x:/@.operand?value
-              src:>
-          case:less-than
-            set:x:/@.operand?value
-              src:<
-          case:more-than-equal
-            set:x:/@.operand?value
-              src:>=
-          case:less-than-equal
-            set:x:/@.operand?value
-              src:<=
-          case:like
-            set:x:/@.operand?value
-              src:like
-          default
-            throw:Operand '{0}' is not supported
-              :x:/@.operand?value
-
-        /*
-         * Making sure we prevent SQL insertion attacks in our "column name" parts.
-         */
-        replace:x:/@_dp?value
-          src:`
-          dest:\`
-
-        /*
-         * Dynamically building SQL accordingly.
-         *
-         * The first parts are our existing SQL, the second the column name, the third
-         * our operand (>, !=, <=, like, etc), and the fourth part the value to compare against.
+         * First generic parameter, making sure we add a "where" clause.
          */
         set:x:/@.sql?value
-          src:{0} `{1}` {2} @NO{3}
+          src:{0} where
             :x:/@.sql?value
-            :x:/@replace?value
+
+      else
+
+        /*
+         * Not the first parameter, hence we add our operator part.
+         */
+        set:x:/@.sql?value
+          src:{0} {1}
+            :x:/@.sql?value
+            :x:/@.boolean?value
+
+      /*
+       * Retrieving operand and value of our QUERY parameter, and handling it accordingly.
+       */
+      p5.web.query.get:x:/@_dp?value
+
+      /*
+       * Splitting query value to get "operand", and "value".
+       */
+      split:x:/@p5.web.query.get/*?value
+        =:":"
+
+      /*
+       * Retrieving our "operand", and removing it from the above
+       * [split] results afterwards.
+       */
+      eval-x:x:/+
+      .operand:x:/@split/0?name
+      set:x:/@split/0
+
+      /*
+       * In case "value" parts contains a ":", there will more than one
+       * remaining item in above [split] result now, at which point we'll
+       * need to join them with ":" being our [sep] character.
+       */
+      join:x:/@split/*?name
+        sep:":"
+
+      /*
+       * Sanity checking "operand", by making sure it's an operand that
+       * we know how to handle, to prevent from e.g. SQL insertion attacks, etc.
+       *
+       * TODO: Check up that we add all operands that MySQL supports.
+       */
+      switch:x:/@.operand?value
+        case:equal
+          set:x:/@.operand?value
+            src:=
+        case:not-equal
+          set:x:/@.operand?value
+            src:!=
+        case:more-than
+          set:x:/@.operand?value
+            src:>
+        case:less-than
+          set:x:/@.operand?value
+            src:<
+        case:more-than-equal
+          set:x:/@.operand?value
+            src:>=
+        case:less-than-equal
+          set:x:/@.operand?value
+            src:<=
+        case:like
+          set:x:/@.operand?value
+            src:like
+        default
+          throw:Operand '{0}' is not supported
             :x:/@.operand?value
-            :x:/@.no?value
 
-        /*
-         * Adding SQL parameter to [p5.mysql.select] invocation.
-         */
-        set:x:/+2/*/*?name
-          src:@NO{0}
-            :x:/@.no?value
-        eval-x:x:/+/*/*
-        add:x:/..p5.mysql.connect/*/p5.mysql.select
-          src
-            foo:x:/@join?value
+      /*
+       * Making sure we prevent SQL insertion attacks in our "column name" parts.
+       */
+      replace:x:/@_dp?value
+        src:`
+        dest:\`
 
-        /*
-         * Incrementing "counter", which dynamically creates our SQL parameter's names.
-         */
-        set:x:/@.no?value
-          +:x:/@.no?value
-            _:1
+      /*
+       * Dynamically building SQL accordingly.
+       *
+       * The first parts are our existing SQL, the second the column name, the third
+       * our operand (>, !=, <=, like, etc), and the fourth part the value to compare against.
+       */
+      set:x:/@.sql?value
+        src:{0} `{1}` {2} @NO{3}
+          :x:/@.sql?value
+          :x:/@replace?value
+          :x:/@.operand?value
+          :x:/@.no?value
+
+      /*
+       * Adding SQL parameter to [p5.mysql.select] invocation.
+       */
+      set:x:/+2/*/*?name
+        src:@NO{0}
+          :x:/@.no?value
+      eval-x:x:/+/*/*
+      add:x:/../*/p5.mysql.select
+        src
+          foo:x:/@join?value
+
+      /*
+       * Incrementing "counter", which dynamically creates our SQL parameter's names.
+       */
+      set:x:/@.no?value
+        +:x:/@.no?value
+          _:1
+
+
+/*
+ * Further parametrising our SQL according to [offset] and [limit] GET QUERY parameters supplied by client.
+ *
+ * Notice, we default offset to 0 and limit to 10, to avoid exhausting server resources by making humongously
+ * large selects.
+ *
+ * We also throw an exception if client tries to select more than 250 records, to avoid having the server
+ * being exhausted by erronous client-side code.
+ */
+.defaults
+  [order-dir]:asc
+  [limit]:long:10
+  [offset]:long:0
+p5.web.query.get:[order-by]
+p5.web.query.get:[order-dir]
+p5.web.query.get:[limit]
+p5.web.query.get:[offset]
+
+
+/*
+ * For simplicity reasons, we stuff our SQL tail into this "buffer".
+ * This makes it easier to reference it further down in file.
+ */
+eval-x:x:/+/*
+.values
+  order-by:x:/@p5.web.query.get/[1,2]/*?value
+  order-dir:x:(/@p5.web.query.get/[2,3]/*|/@.defaults/0)/$?value
+  limit:x:(/@p5.web.query.get/[3,4]/*|/@.defaults/1)/$?value.long
+  offset:x:(/@p5.web.query.get/[4,5]/*|/@.defaults/2)/$?value.long
+
+
+/*
+ * Making sure client doesn't try to select more than 250 records.
+ */
+if:x:/@.values/*/limit?value
+  >:long:250
+  throw:You can't select more than 250 records at the time.
+
+
+/*
+ * Checking if client supplied an "order by" QUERY parameter.
+ */
+if:x:/@.values/*/order-by?value
 
   /*
-   * Further parametrising our SQL according to [offset] and [limit] GET QUERY parameters supplied by client.
-   *
-   * Notice, we default offset to 0 and limit to 10, to avoid exhausting server resources by making humongously
-   * large selects.
-   *
-   * We also throw an exception if client tries to select more than 250 records, to avoid having the server
-   * being exhausted by erronous client-side code.
+   * Sanity checking direction for "order by" parts.
    */
-  .defaults
-    [order-dir]:asc
-    [limit]:long:10
-    [offset]:long:0
-  p5.web.query.get:[order-by]
-  p5.web.query.get:[order-dir]
-  p5.web.query.get:[limit]
-  p5.web.query.get:[offset]
+  if:x:/@.values/*/order-dir?value
+    !=:asc
+    and:x:/@.values/*/order-dir?value
+      !=:desc
+    throw:Only provide 'asc' or 'desc' as '[order-dir]' query parameter.
 
   /*
-   * For simplicity reasons, we stuff our SQL tail into this "buffer".
-   * This makes it easier to reference it further down in file.
+   * Making sure we guard against SQL insertion attacks in our "order by" parameter.
    */
-  eval-x:x:/+/*
-  .values
-    order-by:x:/..p5.mysql.connect/*/p5.web.query.get/[1,2]/*?value
-    order-dir:x:(/..p5.mysql.connect/*/p5.web.query.get/[2,3]/*|/@.defaults/0)/$?value
-    limit:x:(/..p5.mysql.connect/*/p5.web.query.get/[3,4]/*|/@.defaults/1)/$?value.long
-    offset:x:(/..p5.mysql.connect/*/p5.web.query.get/[4,5]/*|/@.defaults/2)/$?value.long
-
-  /*
-   * Making sure client doesn't try to select more than 250 records.
-   */
-  if:x:/@.values/*/limit?value
-    >:long:250
-    throw:You can't select more than 250 records at the time.
-
-  /*
-   * Checking if client supplied an "order by" QUERY parameter.
-   */
-  if:x:/@.values/*/order-by?value
-
-    /*
-     * Sanity checking direction for "order by" parts.
-     */
-    if:x:/@.values/*/order-dir?value
-      !=:asc
-      and:x:/@.values/*/order-dir?value
-        !=:desc
-      throw:Only provide 'asc' or 'desc' as '[order-dir]' query parameter.
-
-    /*
-     * Making sure we guard against SQL insertion attacks in our "order by" parameter.
-     */
-    replace:x:/@.values/*/order-by?value
-      src:`
-      dest:\`
-    set:x:/@.sql?value
-      src:{0} order by `{1}` {2}
-        :x:/@.sql?value
-        :x:/@replace?value
-        :x:/@.values/*/order-dir?value
-
-  /*
-   * Adding tail (limit and offset).
-   */
+  replace:x:/@.values/*/order-by?value
+    src:`
+    dest:\`
   set:x:/@.sql?value
-    src:{0} limit @limit offset @offset
+    src:{0} order by `{1}` {2}
       :x:/@.sql?value
+      :x:/@replace?value
+      :x:/@.values/*/order-dir?value
 
-  /*
-   * Executing actual SQL, now that we have parametrised it, and returning the results to the client as JSON.
-   */
-  p5.mysql.select:x:/@.sql?value
-    @limit:x:/@.values/*/limit?value
-    @offset:x:/@.values/*/offset?value
 
-  /*
-   * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
-   * JSON results back to caller.
-   */
-  p5.web.header.set:Content-Type
-    src:application/json
+/*
+ * Adding tail (limit and offset).
+ */
+set:x:/@.sql?value
+  src:{0} limit @limit offset @offset
+    :x:/@.sql?value
 
-  /*
-   * Checking for empty result, at which point we simply return empty JSON, and return early.
-   */
-  if:x:/@p5.mysql.select/*
-    not
-    p5.web.echo:[]
-    return
 
-  /*
-   * Transforming above results to JSON and returning it to client as such.
-   *
-   * Notice, to make sure we echo this as a JSON array to the client, we explicitly 
-   * set all names of all children of our [p5.mysql.select] invocation to "empty".
-   */
-  set:x:/@p5.mysql.select/*?name
-    src:
-  lambda2json:x:/@p5.mysql.select/*
+/*
+ * Executing actual SQL, now that we have parametrised it, and returning the results to the client as JSON.
+ */
+p5.mysql.select:x:/@.sql?value
+  @limit:x:/@.values/*/limit?value
+  @offset:x:/@.values/*/offset?value
 
-  /*
-   * Returning JSON to caller.
-   */
-  p5.web.echo:x:/@lambda2json?value
+
+/*
+ * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+ * JSON results back to caller.
+ */
+p5.web.header.set:Content-Type
+  src:application/json
+
+
+/*
+ * Checking for empty result, at which point we simply return empty JSON, and return early.
+ */
+if:x:/@p5.mysql.select/*
+  not
+  p5.web.echo:[]
+  return
+
+
+/*
+ * Transforming above results to JSON and returning it to client as such.
+ *
+ * Notice, to make sure we echo this as a JSON array to the client, we explicitly 
+ * set all names of all children of our [p5.mysql.select] invocation to "empty".
+ */
+set:x:/@p5.mysql.select/*?name
+  src:
+lambda2json:x:/@p5.mysql.select/*
+
+
+/*
+ * Returning JSON to caller.
+ */
+p5.web.echo:x:/@lambda2json?value

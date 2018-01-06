@@ -10,7 +10,6 @@
  * Sanity checking arguments.
  */
 micro.lambda.contract.min:x:/..
-  database:string
   table:string
 
 
@@ -24,110 +23,107 @@ if:x:/@p5.web.request.get-method?value
 
 
 /*
- * Opening up our database connection, and evaluating our update SQL statement, echoing the results
- * to the client as JSON.
+ * Our actual SQL, which is further parametrised, according to arguments given by client, 
+ * as HTTP parameters.
+ *
+ * Notice, we make sure we avoid SQL insertion attacks, by escaping any backticks in table name.
  */
-p5.mysql.connect:[{0}]
-  :x:/../*/database?value
+replace:x:/../*/table?value
+  src:`
+  dest:\`
+eval-x:x:/+
+.sql:update `{0}`
+  :x:/@replace?value
+
+
+/*
+ * Further parametrising our SQL according to GET POST parameters supplied by client.
+ */
+.no:int:0
+p5.web.post.list
+for-each:x:/@p5.web.post.list/*?name
 
   /*
-   * Our actual SQL, which is further parametrised, according to arguments given by client, 
-   * as HTTP parameters.
-   *
-   * Notice, we make sure we avoid SQL insertion attacks, by escaping any backticks in table name.
+   * Appending either "set" or "," to our SQL.
    */
-  replace:x:/../*/table?value
-    src:`
-    dest:\`
-  eval-x:x:/+
-  .sql:update `{0}`
-    :x:/@replace?value
-
-  /*
-   * Further parametrising our SQL according to GET POST parameters supplied by client.
-   */
-  .no:int:0
-  p5.web.post.list
-  for-each:x:/@p5.web.post.list/*?name
+  if:x:/@.no?value
+    =:int:0
 
     /*
-     * Appending either "set" or "," to our SQL.
+     * This is our first changed value, hence appending "set" to our SQL.
      */
-    if:x:/@.no?value
-      =:int:0
-
-      /*
-       * This is our first changed value, hence appending "set" to our SQL.
-       */
-      set:x:/@.sql?value
-        src:"{0} set "
-          :x:/@.sql?value
-
-    else
-
-      /*
-       * This is not our first changed value, hence appending "," to our SQL.
-       */
-      set:x:/@.sql?value
-        src:"{0}, "
-          :x:/@.sql?value
-
-    /*
-     * Retrieving HTTP parameter value for our currently iterated HTTP parameter.
-     */
-    p5.web.post.get:x:/@_dp?value
-    replace:x:/@_dp?value
-      src:`
-      dest:\`
     set:x:/@.sql?value
-      src:{0} `{1}` = @NO{2}
+      src:"{0} set "
         :x:/@.sql?value
-        :x:/@replace?value
-        :x:/@.no?value
-    set:x:/+2/*/*?name
-      src:@NO{0}
-        :x:/@.no?value
-    eval-x:x:/+/*/*
-    add:x:/..p5.mysql.connect/*/p5.mysql.update
-      src
-        foo:x:/@p5.web.post.get/*?value
+
+  else
 
     /*
-     * Increamenting "counter" which dynamically creates our SQL parameters.
+     * This is not our first changed value, hence appending "," to our SQL.
      */
-    set:x:/@.no?value
-      +:x:/@.no?value
-        _:1
+    set:x:/@.sql?value
+      src:"{0}, "
+        :x:/@.sql?value
 
   /*
-   * Now we can figure out our "where" clause, only allowing for one where clause,
-   * which is expected to be found in the HTTP QUERY parameter collection.
+   * Retrieving HTTP parameter value for our currently iterated HTTP parameter.
    */
-  .no:int:0
-  p5.web.query.list
-  if:x:/@p5.web.query.list/*?count
-    !=:int:1
-    throw:Update requires exactly one query parameter, being the 'where' clause of your update SQL
-  p5.web.query.get:x:/@p5.web.query.list/*?name
-
-  /*
-   * Making sure we avoid SQL insertion attacks.
-   */
-  replace:x:/@p5.web.query.get/*?name
+  p5.web.post.get:x:/@_dp?value
+  replace:x:/@_dp?value
     src:`
     dest:\`
   set:x:/@.sql?value
-    src:{0} where `{1}` = @WHERE
+    src:{0} `{1}` = @NO{2}
       :x:/@.sql?value
       :x:/@replace?value
-  add:x:/..p5.mysql.connect/*/p5.mysql.update
+      :x:/@.no?value
+  set:x:/+2/*/*?name
+    src:@NO{0}
+      :x:/@.no?value
+  eval-x:x:/+/*/*
+  add:x:/../*/p5.mysql.update
     src
-      @WHERE:x:/@p5.web.query.get/*?value
+      foo:x:/@p5.web.post.get/*?value
 
   /*
-   * Executing actual SQL, now that we have parametrised it, and returning results of invocation to client.
+   * Increamenting "counter" which dynamically creates our SQL parameters.
    */
-  p5.mysql.update:x:/@.sql?value
-  p5.web.echo:@"{{""affected_records"":""{0}""}}"
-    :x:/@p5.mysql.update?value
+  set:x:/@.no?value
+    +:x:/@.no?value
+      _:1
+
+
+/*
+ * Now we can figure out our "where" clause, only allowing for one where clause,
+ * which is expected to be found in the HTTP QUERY parameter collection.
+ */
+.no:int:0
+p5.web.query.list
+if:x:/@p5.web.query.list/*?count
+  !=:int:1
+  throw:Update requires exactly one query parameter, being the 'where' clause of your update SQL
+p5.web.query.get:x:/@p5.web.query.list/*?name
+
+
+/*
+ * Making sure we avoid SQL insertion attacks.
+ */
+replace:x:/@p5.web.query.get/*?name
+  src:`
+  dest:\`
+set:x:/@.sql?value
+  src:{0} where `{1}` = @WHERE
+    :x:/@.sql?value
+    :x:/@replace?value
+add:x:/../*/p5.mysql.update
+  src
+    @WHERE:x:/@p5.web.query.get/*?value
+
+
+/*
+ * Executing actual SQL, now that we have parametrised it, and returning results of invocation to client.
+ */
+p5.mysql.update:x:/@.sql?value
+p5.web.echo:@"{{""affected_records"":""{0}""}}"
+  :x:/@p5.mysql.update?value
 
