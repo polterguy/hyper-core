@@ -358,8 +358,7 @@ foo-bar.my-event
 return:x:/@foo-bar.my-event?value
 ```
 
-If you invoked the above extension method, the client would retrieve the following from your HTTP end point.
-For the record, assuming you modified our above _"foo.hl" file, the URL to invoke your C# code would become
+For the record, assuming you modified our above _"foo.hl"_ file, the URL to invoke your C# method would become
 the following `/hyper-core/mysql/todo/foo/x`, and it would return the following JSON.
 
 ```json
