@@ -46,7 +46,7 @@ _"where"_ declarations. The `select` operation requires you to use a GET HTTP re
 * __[offset]__ - Offset of where to start fetching items. Defaults to `0`.
 * __[limit]__ - Number of items to return. Defaults to `10`. Notice, to avoid having buggy front end code exhaust the server and bandwidth resources, it will throw an exception if you try to select more than 250 items.
 * __[boolean]__ - Which boolean operator to use for multiple filter criteria. Defaults to `OR`.
-* __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `OR`'ed together by default.
+* __xxx__ - Becomes additional parts of your `where` clause. Basically _"anything else"_. **Notice** - These additional arguments are `OR`'ed together by default. Change the boolean operator by changing the `[boolean]` argument.
 
 All parameters above are optional, and will be given _"sane defaults"_ if omitted. If you want to 
 select only the `description` and `id` columns, and sort descending by `description`, from your `todo` database, and 
