@@ -180,7 +180,8 @@ down in this document how to create.
 ### Creating your own extension methods
 
 Often times the above 4 basic CRUD operations simply won't cut it for you. Maybe you want to perform a join on
-multiple tables for instance? Or you want to add more complex conditions than the above allows you to? For such 
+multiple tables for instance? Or you want to add more complex conditions than the above allows you to? Or maybe
+you need to insert into multiple tables during one invocation, wrapping your SQL in a transaction? For such 
 times, there is the `x` method. The `x` method doesn't take a table name as its second parameter. Instead it requires
 the name, to your extension method, which you'll need to supply as a Hyperlambda file, inside
 of your _"/common/documents/private/hyper-core/x/"_ folder. If you have a file called for instance
