@@ -170,7 +170,7 @@ There are also authentication end points, to login and logout a user, towards th
 [p5.auth](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth) authentication/authorisation
 module in Phosphorus Five. This allows you to easily authenticate and authorise your users towards
 the user and role based auth system in Phosphorus Five. Authentication is done by issuing a `POST` HTTP 
-request towards the login module. If you're in JavaScript land for instance, you can login 
+request towards the `login` module. If you're in JavaScript land for instance, you can login 
 with something resembling the following.
 
 ```
@@ -180,7 +180,7 @@ xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
-    alert('Result of login operation was; ' + window.res.result);
+    alert('You belong to the role; ' + window.res.role);
   }
 };
 var username = 'your_username';
