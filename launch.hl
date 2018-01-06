@@ -17,13 +17,48 @@ split:x:/@split/0?name
 
 
 /*
+ * Verifying that the module user is trying to access, actually exists.
+ */
+if
+  fetch:x:/0/0?value
+    folder-exists:@HYPER-CORE/{0}/
+      :x:/@split/1?name
+  not
+  p5.web.response.set-status-code:404
+  p5.web.echo:Oops, that appears to be a dead URL
+  return
+
+
+/*
  * Before we run our authorize logic, we check if this is a request for
- * our "/login" url, at which we (obviously) allow everybody access.
+ * our "auth" module, at which we obviously allow everybody access, since it
+ * is the only way to allow a client to explicitly login.
  */
 if:x:/@split/1?name
   =:auth
+
+  /*
+   * Sanity checking that requested submodule actually exists.
+   */
+  if
+    fetch:x:/0/0?value
+      file-exists:@HYPER-CORE/{0}/{1}.hl
+        :x:/@split/1?name
+        :x:/@split/2?name
+    not
+    p5.web.response.set-status-code:404
+    p5.web.echo:Oops, that appears to be a dead URL
+    return
+
+  /*
+   * Evaluating specified "auth" submodule.
+   */
   micro.evaluate.file:@HYPER-CORE/auth/{0}.hl
     :x:/@split/2?name
+
+  /*
+   * Returning early, to avoid evaluating the rest of this file.
+   */
   return
 
 
@@ -40,7 +75,7 @@ if
    * User doesn't have access to this module.
    */
   p5.web.response.set-status-code:403
-  p5.web.echo:Access denied
+  p5.web.echo:Oops, I can't let you do that Sir
   return
 
 
