@@ -195,7 +195,9 @@ xhr.send('username=' + username + '&password=' + password + '&persist=' + persis
 If you set the `persist` query parameter to true, a persistent cookie will be created on the client, making sure
 the client will be remembered according to the persistent authorisation cookie rules of Phosphorus Five. The default
 value for persisting a user's credential cookie using persistent logins are `false`, implying once the user closes
-his browser, or ends his session somehow, he will have to login again.
+his browser, or ends his session somehow, he will have to login again. The persistent authentication cookie
+rule of Phosphorus Five can be edited in your _"web.config"_ file, by changing the `p5.auth.credential-cookie-valid` key's
+value.
 
 ### Logging out
 
