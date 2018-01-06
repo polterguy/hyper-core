@@ -395,12 +395,23 @@ Now of course, if you do this, you do not have any open database connections, an
 exactly what you want to do. The JSON returned from these methods, and passed into these methods, will still
 be 100% similar to its `/hyper-core/mysql/todo/foo/x` counterpart.
 
-## Authentication
+## Authentication and authorisation
 
-There are also authentication end points, to login and logout a user, towards the 
+There are also authentication end points in Hyper Core, to login and logout a user, towards the 
 [p5.auth](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth) authentication/authorisation
 module in Phosphorus Five. This allows you to easily authenticate your users towards
 the user and role based auth system in Phosphorus Five. The main URL for this module is `auth`.
+
+### About the authentication system
+
+**Notice**, the authentication system in Hyper Core builds upon cookies. These are served such that
+they are not accessible on the client (using JavaScript). This has many advantages, and some few disadvantages.
+The main advantage, is that the authentication process becomes **dead simple** for JavaScript/browser based
+authentication, and almost nothing the browser even have to even worry about, since the browser will
+automatically take care of handling these authentication cookies for you.
+
+However, for other types of clients, it requires that you are able to store the cookies returned
+from the server, and re-transmit them upon consecutive requests, as a _"user ticket"_.
 
 ### Logging in
 
