@@ -315,6 +315,11 @@ for-each:x:/@p5.mysql.select/*
 return:x:/@p5.mysql.select/*
 ```
 
+The above will actually translate all your descriptions into Norwegian, before returning them to the client.
+Obviously, if you want to implement something like the above, you should definitely cache the results somehow 
+from Google Translate, to avoid multiple roundtrips for the same items again. However, to keep our example
+small and simple, we didn't implement that in our above example.
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
