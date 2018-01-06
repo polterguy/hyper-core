@@ -288,8 +288,8 @@ don't really have to worry about this, since for the most parts you will be crea
 simply invoking a MySQL active event. However, Hyperlambda is actually a fully fledged programming language, which
 is Turing complete, and allows you to do much more advanced stuff, than what we are doing above.
 
-Let's create a thought experiment, imagining that we would for instance like to translate the description of 
-our items into Norwegian, before we return them to the client. This is in fact easily accomplished using Hyperlambda, 
+Let's create a thought experiment. Imagine that you want to to translate the description of 
+your items into Norwegian, before you return them to the client. This is in fact easily accomplished using Hyperlambda, 
 by invoking an Active Event from Micro, which allows us to invoke Google Translate. Below is an example of doing 
 just that.
 
