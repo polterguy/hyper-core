@@ -516,6 +516,7 @@ for the same item. To modify it such that only one client will invoke Google Tra
 to use a **[read-lock]** while checking the cache, and a **[write-lock]** while writing to the cache,
 to synchronise access to your cache. Yet again, this is beyond the scope of this document. Shoot me 
 an email at thomas@gaiasoul.com if you want me to write an article for you, with an example of how to do this.
+I also do code reviews, and can help out with architecture and tutoring.
 
 ## Authentication and authorisation
 
