@@ -405,16 +405,16 @@ Translate once for every single item it retrieves from the `items` table. Needle
 is simply practically useless.
 
 One thing that might be tempting for such a scenarion, would be to implement something that caches
-based upon the HTTP request, and returns the cached object. This is of course sub optimal, since it
+based upon the HTTP request, and returns the cached object. This is of course sub-optimal, since it
 would require the client to submit an HTTP request, exactly resembling something another user has 
 transmitted earlier, for the cache to kick in.
 
-Our above scenario for instance, does a query for _"foo"_, imagine if some other user comes later and
-does a query for _"foo 2"_. Many of the items returned for the second request, would also exist in the 
-first request - However, the URL would still be different, and the cache for the HTTP requests, would
-not be of any use here. A better solution for such scenarios would be to use for instance the
+Imagine for our above scenario for instance, doing a query for _"foo"_. Then imagine if some other user 
+comes later and does a query for _"foo 2"_. Many of the items returned for the second request, would 
+also exist in the first request - However, the URL would still be different, and the cache for the 
+HTTP requests, would be useless. A better solution for such scenarios would be to use for instance the
 **[p5.web.cache]** object, to use the English text as the _"key"_, and the Norwegian translation
-as the _"value"_, and then before doing our Google Translate lookup, check to see if another
+as the _"value"_ - And then before doing our Google Translate lookup, check to see if another
 client had already translated our `description` previously.
 
 If we are to take our Google Translate example, and modify it to see this in action, we could create
