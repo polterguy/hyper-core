@@ -504,9 +504,9 @@ object basis** - And hence arguably, has an internal _"memcache"_ implementation
 items itself. Eliminating the need for any server-side state. However, this simply offloads the server,
 while making the client execute poorly, since it'll have to do the Google Translate invocations for
 each item, before it can render its UI. Our above _"cache"_ solution, would only go towards Google Translate
-every time it encounters a `description` it has not previously encountered, while for every consecutive
+every time it encounters a `description` it has not previously encountered - While for every consecutive
 request, it would simply return the cached value. Making all clients, except one initial HTTP request
-per search query, perform blistering fast.
+per search query, returning one or more items it hasn't seen before, perform blistering fast.
 
 Also notice that the default timeout for the cache object in Hyperlambda is 30 minutes, but this
 can be changed as you see fit. Sliding expirations are also supported.
