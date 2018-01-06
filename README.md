@@ -471,7 +471,7 @@ and you access your above extension method, using a URL such as for instance the
 ```
 
 The the first time you request that URL, it will probably spend several seconds responding, since it'll
-have to internally create 4 HTTP requests towards Google Translet, before it can return your data.
+have to internally create 4 HTTP requests towards Google Translate, before it can return your data.
 However, all consecutive requests, also those with different search criteria, but still returning the
 same items - Will be much faster, since they can simply lookup the translated item from the cache,
 and doesn't have to roundtrip to Google Translate to retrieve the Norwegian translation of your item.
@@ -485,9 +485,14 @@ and not on the HTTP request itself.
 /hyper-core/mysql/todo/foo/x?description=foo+2
 ```
 
-You can also cache things on a per user basis, using the **[p5,web,session]** event instead, but we are
-now moving in to become borderline in regards to what is the scope of this document, and what is 
-the objective of learning Hyperlambda in general.
+This makes it possible to do things with Hyper Core, that is difficult to even imagine doing with
+other types of similar framework, built entirely stateless - Simply since you **can** (if you wish) 
+choose to store state, in temporary objects, om the server, improving the execution time of your
+requests from 1.2 seconds, to 0.076 seconds.
+
+You can also cache things on a per user basis, using the **[p5.web.session]** event instead, but we are
+now moving into what is borderline in regards to what the scope of this document is, and the scope of 
+learning Hyperlambda in general.
 
 ## Authentication and authorisation
 
