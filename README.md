@@ -186,9 +186,10 @@ xhr.onreadystatechange = function() {
     alert('You belong to the role; ' + window.res.role);
   }
 };
-var username = 'your_username';
-var password = 'your_password';
-xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password) + '&persist=true';
+var username = encodeURIComponent ('your_username');
+var password = encodeURIComponent ('your_password');
+var persist = 'true';
+xhr.send('username=' + username + '&password=' + password + '&persist=' + persist;
 ```
 
 If you set the `persist` query parameter to true, a persistent cookie will be created on the client, making sure
