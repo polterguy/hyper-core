@@ -278,10 +278,12 @@ is Turing complete, and allows you to do much more advanced stuff, than what we 
 
 For most practical concerns, this won't be an issue, since you'll probably simply invoke a couple of MySQL
 Active Events in your code, and return its results - Realise that you can still do some pretty amazing stuff
-with Hyperlambda, using more of its feature set. Let's create a thought experiment, imagining that we would for
-instance like to translate the description of our items into Norwegian, before we return them to the client.
-This is in fact easily accomplished using Hyperlambda, by invoking an Active Event from Micro, which allows
-us to invoke Google Translate. Below is an example of doing just that.
+with Hyperlambda, using more of its feature set.
+
+Let's create a thought experiment, imagining that we would for instance like to translate the description of 
+our items into Norwegian, before we return them to the client. This is in fact easily accomplished using Hyperlambda, 
+by invoking an Active Event from Micro, which allows us to invoke Google Translate. Below is an example of doing 
+just that.
 
 ```
 /*
