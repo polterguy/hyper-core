@@ -89,11 +89,54 @@ p5.web.header.set:Content-Type
  * and escaping any backticks (`) in the result.
  */
 if:x:/@micro.evaluate.file?value
-  replace:x:/@micro.evaluate.file?value
-    src:`
-    dest:\`
-  p5.web.echo:@"{{""result"":`{0}`}}"
-    :x:/@replace?value
+  or:x:/@micro.evaluate.file?value
+    =:bool:false
+  if
+    p5.types.can-convert:x:/@micro.evaluate.file?value
+      type:double
+
+    /*
+     * Returning as JSON to client without any quoting.
+     */
+    p5.web.echo:@"{{""result"":{0}}}"
+      :x:/@micro.evaluate.file?value
+
+  else-if:x:/@micro.evaluate.file?value
+    =:bool:true
+    or:x:/@micro.evaluate.file?value
+      =:bool:false
+
+    /*
+     * Returning as JSON to client without any quoting.
+     */
+    to-lower:x:/@micro.evaluate.file?value.string
+    p5.web.echo:@"{{""result"":{0}}}"
+      :x:/@to-lower?value
+
+  else
+
+    /*
+     * Returning as quoted JSON to client.
+     */
+    replace:x:/@micro.evaluate.file?value
+      src:`
+      dest:\`
+    p5.web.echo:@"{{""result"":`{0}`}}"
+      :x:/@replace?value
+
+  /*
+   * Returning early, to avoid evaluation of the rest of our file.
+   */
+  return
+
+
+/*
+ * Checking if the above evaluation of our extension method returned nothing, at
+ * which point we return an empty JSON array to client, and return early.
+ */
+if:x:/@micro.evaluate.file/*
+  not
+  p5.web.echo:[]
   return
 
 
@@ -106,16 +149,6 @@ if:x:/@micro.evaluate.file/0?name
   =:row
   set:x:/@micro.evaluate.file/*?name
     src:
-
-
-/*
- * Checking if the above evaluation of our extension method returned nothing, at
- * which point we return an empty JSON array to client, and return early.
- */
-if:x:/@micro.evaluate.file/*
-  not
-  p5.web.echo:[]
-  return
 
 
 /*
