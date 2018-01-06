@@ -331,7 +331,8 @@ Below is an example of some C# code that would do just that for you.
 using System;
 using p5.core;
 
-class Foo {
+class Foo
+{
     [ActiveEvent (Name = "foo-bar.my-event")]
     public static void foo_bar_my_event (ApplicationContext context, ActiveEventArgs e)
     {
