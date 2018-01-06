@@ -336,7 +336,7 @@ class Foo
     [ActiveEvent (Name = "foo-bar.my-event")]
     public static void foo_bar_my_event (ApplicationContext context, ActiveEventArgs e)
     {
-        e.Args.Value = "Hello from C#";
+        e.Args.Value = 42;
     }
 }
 ```
@@ -361,7 +361,7 @@ return:x:/@foo-bar.my-event?value
 If you invoked the above extension method, the client would retrieve the following from your HTTP end point.
 
 ```json
-{"result":"Hello from C#"}
+{"result":42}
 ```
 
 ## Authentication
