@@ -203,8 +203,9 @@ return:x:/@p5.mysql.scalar?value
 ```
 
 If you invoke the extension method above, with something resembling the following 
-URL `/hyper-core/mysql/todo/foo/x?description=bar` - The above 
-will return JSON resembling the following to your client.
+URL `/hyper-core/mysql/todo/foo/x?description=%bar%` - The above 
+will return JSON resembling the following to your client, assuming you have to records containing the
+string _"bar"_ in their description.
 
 ```json
 {"result":2}
