@@ -661,14 +661,4 @@ completely bypass your security implementations.
 
 ## Installation
 
-Hyper Core has not yet been released, which means that if you want to test it, you'll have to
-first first of all [install Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases), and then
-clone or download Hyper Core, and make sure you put it inside of your Phosphorus Five folder structure, 
-at _"/core/p5.webapp/modules/"_.
-
-## Warning
-
-This is **ALPHA** stuff, and **NOT** ready for production yet!
-
-If you wish, you can see a video of me demonstrating the system [here](https://www.youtube.com/watch?v=tWAZUAKVBeg).
-
+Hyper Core is included in the main download of [Phosphorus Five](https://github.com/polterguy/phosphorusfive/releases).
