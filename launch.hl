@@ -20,17 +20,10 @@ split:x:/@split/0?name
  * Before we run our authorize logic, we check if this is a request for
  * our "/login" url, at which we (obviously) allow everybody access.
  */
-if:x:/@split/0/-?name
-  =:login
-  micro.evaluate.file:@HYPER-CORE/authentication/login.hl
-  return
-else-if:x:/@split/0/-?name
-  =:logout
-  micro.evaluate.file:@HYPER-CORE/authentication/logout.hl
-  return
-else-if:x:/@split/0/-?name
-  =:whoami
-  micro.evaluate.file:@HYPER-CORE/authentication/whoami.hl
+if:x:/@split/1?name
+  =:auth
+  micro.evaluate.file:@HYPER-CORE/auth/{0}.hl
+    :x:/@split/2?name
   return
 
 
