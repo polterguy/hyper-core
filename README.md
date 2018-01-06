@@ -116,7 +116,7 @@ var email = 'john@doe.com';
 xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURIComponent (email);
 ```
 
-The `insert` operation will return the id of your inserted item.
+The `insert` operation will return the id of your inserted item as `id`.
 
 ### Update operation
 
@@ -141,7 +141,9 @@ xhr.send(body);
 ```
 
 The above will update the `name` value for your `database.table` database item having the id of 5, 
-and set its new value to _"John Doe"_.
+and set its new value to _"John Doe"_. **Notice**, the `update` method can only be given one HTTP query
+parameter as its condition. To construct more complex update statements, you must use the extensibility
+features, which we will discuss further down in this document.
 
 ### Delete operation
 
