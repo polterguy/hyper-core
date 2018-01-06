@@ -320,6 +320,49 @@ Obviously, if you want to implement something like the above, you should definit
 from Google Translate, to avoid multiple roundtrips for the same items again. However, to keep our example
 small and simple, we didn't implement that in our above example.
 
+#### Creating C#/VB.NET/F# extension methods
+
+You can also create extension methods as CLR methods if you want to. This is easily accomplished by creating 
+a new library type of .Net/Mono project, and add a reference to the project called _"p5.core"_, for then
+to create a static C# method, in one of your classes, and mark it with the attribute `ActiveEvent`.
+Below is an example of some C# code that would do just that for you.
+
+```csharp
+using System;
+using p5.core;
+
+class Foo {
+    [ActiveEvent (Name = "foo-bar.my-event")]
+    public static void foo_bar_my_event (ApplicationContext context, ActiveEventArgs e)
+    {
+        e.Args.Value = "Hello from C#";
+    }
+}
+```
+
+Then you'll need to reference the assembly containing the above class into your main _"p5.webapp"_ project,
+for then to edit your _"web.config"_ file, to include your assembly as a plugin, by adding another `add` entry
+into your `assemblies` configuration. Below is an example of how to accomplish this, assuming your assembly
+is called `foo`.
+
+```xml
+<add assembly="foo" />
+```
+
+If you do the above, you can actually invoke your C# method from an extension method, doing something
+resembling the following.
+
+```
+foo-bar.my-event
+return:x:/@foo-bar.my-event?value
+```
+
+If you invoked the above extension method, the client would retrieve the following from your HTTP end point.
+
+```json
+{"result":`Hello from C#`}
+```
+
 ## Authentication
 
 There are also authentication end points, to login and logout a user, towards the 
