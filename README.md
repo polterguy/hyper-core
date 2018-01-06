@@ -190,12 +190,6 @@ params
   some-url-encoded-parameter:foo
 query
   some-query-parameter:bar
-headers
-  Content-Type:application/x-www-form-urlencoded
-
-  /*
-   * All other headers here ...
-   */
 ```
 
 This allows you to easily reference any parts of the HTTP request, and its decoration, as you see fit.
