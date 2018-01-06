@@ -149,7 +149,9 @@ xhr.send(body);
 The above will update the `name` value for your `database.table` database item having the id of 5, 
 and set its new value to _"John Doe"_. **Notice**, the `update` method can only be given one HTTP query
 parameter as its condition. To construct more complex update statements, you must use the extensibility
-features, which we will discuss further down in this document.
+features, which we will discuss further down in this document. Notice that both the `insert` method,
+and the `update` method, requires you to create your requests as a URL encoded form request. This is done by
+making sure you set the `Content-Type` HTTP header to `application/x-www-form-urlencoded`.
 
 ### Delete operation
 
