@@ -18,13 +18,17 @@ if:x:/@p5.web.request.get-method?value
 /*
  * Retrieving username and password.
  */
+.defaults
+  persist:bool:false
 .args
   username
   password
+  persist
 p5.web.post.get:x:/@.args/*?name
 login
   username:x:/@p5.web.post.get/*/username?value
   password:x:/@p5.web.post.get/*/password?value
+  persist:x:(/@p5.web.post.get/*/persist|/@.defaults/*/persist)/$?value.bool
 
 
 /*

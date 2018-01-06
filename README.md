@@ -168,10 +168,13 @@ xhr.send();
 
 There are also authentication end points, to login and logout a user, towards the 
 [p5.auth](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth) authentication/authorisation
-module in Phosphorus Five. This allows you to easily authenticate and authorise your users towards
-the user and role based auth system in Phosphorus Five. Authentication is done by issuing a `POST` HTTP 
-request towards the `login` module. If you're in JavaScript land for instance, you can login 
-with something resembling the following.
+module in Phosphorus Five. This allows you to easily authenticate your users towards
+the user and role based auth system in Phosphorus Five.
+
+### Logging in
+
+Authentication is done by issuing a `POST` HTTP request towards the `login` module. If you're in JavaScript 
+land for instance, you can login with something resembling the following.
 
 ```
 var xhr = new XMLHttpRequest();
@@ -185,8 +188,15 @@ xhr.onreadystatechange = function() {
 };
 var username = 'your_username';
 var password = 'your_password';
-xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
+xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password) + '&persist=true';
 ```
+
+If you set the `persist` query parameter to true, a persistent cookie will be created on the client, making sure
+the client will be remembered according to the persistent authorisation cookie rules of Phosphorus Five. The default
+value for persisting a user's credential cookie using persistent logins are `false`, implying once the user closes
+his browser, or ends his session somehow, he will have to login again.
+
+### Logging out
 
 If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. An example
 can be found beneath.
@@ -203,7 +213,7 @@ xhr.onreadystatechange = function() {
 xhr.send();
 ```
 
-### [whoami], figuring out you're status
+### whoami, figuring out you're status
 
 Since the default authentication of Phosphorus Five allows a client to persist his logged in status in a cookie on disc,
 it is sometimes necessary to query towards the back end, to find out the authentication status of the client. This
