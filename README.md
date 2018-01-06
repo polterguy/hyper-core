@@ -5,13 +5,13 @@ This allows you to build your front end, towards a mature, reusable, and secure 
 that automatically takes care of common security issues, such as SQL injection attacks, and
 authorisation and authentication. Hyper Core is a 
 a [Phosphorus Five](https://github.com/polterguy/phosphorusfive) module, and hence requires
-you to use Phosphorus Five as your core, but does not impose any requirements towards your front
+you to use Phosphorus Five as your core on the server, but does not impose any requirements towards your front
 at all, and can just as well be consumed by thick clients, in addition to JavaScript based
 front ends - As long as the front end can handle JSON and create HTTP REST invocations.
 
 ## MySQL CRUD operations
 
-There are four basic CRUD operations you can perform on your MySQL database(s). These are as 
+There are 4 basic CRUD operations you can perform on your MySQL database(s). These are as 
 follows.
 
 * __[select]__ - Selects data from your MySQL database. Requires `GET` method.
@@ -19,7 +19,7 @@ follows.
 * __[delete]__ - Deletes data from your database. Requires `DELETE` method.
 * __[insert]__ - Inserts data into your database. Requires `PUT` method.
 
-In addition to the above four standard methods, there is also an `x` method, which allows
+In addition to the standard methods above, there is also an `x` method, which allows
 you to securely create any type of SQL you wish. Check out the documentation for the `x` method
 further down in this document. Each of the above HTTP REST services follows the following URL format.
 
@@ -120,7 +120,9 @@ var email = 'john@doe.com';
 xhr.send(body = 'name=' + encodeURIComponent (name) + '&email=' + encodeURIComponent (email);
 ```
 
-The `insert` operation will return the id of your inserted item as `id`.
+The `insert` operation will return the id of your inserted item as `id`. Notice also that both the `insert` method,
+and the `update` method, requires you to create your requests as a URL encoded form request. This is done by
+making sure you set the `Content-Type` HTTP header to `application/x-www-form-urlencoded`.
 
 ### Update operation
 
