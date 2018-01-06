@@ -494,6 +494,9 @@ You can also cache things on a per user basis, using the **[p5.web.session]** ev
 now moving into what is borderline in regards to what the scope of this document is, and the scope of 
 learning Hyperlambda in general.
 
+Just put this at the back of your mind, that Hyper Core can **cache things on the server side, on a per
+object basis** - And hence arguably, has aninternal _"memcache"_ implementation.
+
 ## Authentication and authorisation
 
 There are also authentication end points in Hyper Core, to login and logout a user, towards the 
