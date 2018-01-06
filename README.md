@@ -72,7 +72,7 @@ you could accomplish that with the following URL.
 
 **Important** - Remember to URL encode your URL!
 
-Notice, if you supply multiple additional query parameters, these will be `OR`'ed together in your select SQL.
+Notice, if you supply multiple additional query parameters, these will be `OR`'ed together by default in your select SQL.
 This means that the following would select all items having either the firstname containing _"john"_, or the surname 
 containing _"hansen"_.
 
@@ -89,12 +89,13 @@ would resemble the following.
 ```
 
 The above URL would fetch only items containing both the text _"john"_ in its firstname, and the value of _"hansen"_
-in its surname.
+in its surname. More complex queries, such as join operations, and richer SQL queries, can be constructed using
+the extensibility features of the MySQL module. Which we will have a look at later.
 
 ### Insert operation
 
 The `insert` operation is arguably simpler than the `select` operation, since it doesn't require as many arguments. It requires
-you to use a `PUT` HTTP request though, and expects each column to be declared as a value/key pair in your body's request.
+you to use a `PUT` HTTP request, and expects each column to be declared as a value/key pair in your body's request.
 For instance, assuming you're in JavaScript land for instance, you could insert a column into your database with
 the following code.
 
@@ -133,8 +134,7 @@ xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 xhr.onreadystatechange = function() {
   if (xhr.readyState === 4) {
     eval("window.res = " + xhr.responseText);
-    console.log('Item was successfully updated, affected records was; ' + window.res.affected_records);
-    get_items ();
+    alert('Item was successfully updated, affected records was; ' + window.res.affected_records);
   }
 };
 var body = 'name=' + name;
