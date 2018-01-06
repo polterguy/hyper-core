@@ -25,7 +25,7 @@ if
       :x:/@split/1?name
   not
   p5.web.response.set-status-code:404
-  p5.web.echo:Oops, that appears to be a dead URL
+  p5.web.echo:Oops, that appears to be a non existent module
   return
 
 
@@ -47,7 +47,7 @@ if:x:/@split/1?name
         :x:/@split/2?name
     not
     p5.web.response.set-status-code:404
-    p5.web.echo:Oops, that appears to be a dead URL
+    p5.web.echo:Oops, that appears to be a non existent submodule
     return
 
   /*

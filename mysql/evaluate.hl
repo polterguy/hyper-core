@@ -48,7 +48,7 @@ if
       :x:/@.args/*/operation?value
   not
   p5.web.response.set-status-code:404
-  p5.web.echo:Oops, that operation doesn't exist.
+  p5.web.echo:Oops, that method doesn't exist for this module.
   return
 
 
@@ -68,5 +68,10 @@ try
       :x:/@.args/*/operation?value
       table:x:/@.args/*/table?value
 catch
+
+  /*
+   * Oops, exception occured, making sure we return error HTTP status, and exception message
+   * to the client.
+   */
   p5.web.response.set-status-code:400
   p5.web.echo:x:/@message?value

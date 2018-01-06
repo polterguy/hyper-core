@@ -17,7 +17,9 @@ follows.
 * __[delete]__ - Deletes data from your database. Requires `DELETE` method.
 * __[insert]__ - Inserts data into your database. Requires `PUT` method.
 
-Each of the above HTTP REST services follows the following URL format. 
+In addition to the above four standard methods, there is also an `x` method, which allows
+you to securely create any type of SQL you wish. Check out the documentation for the `x` method
+further down in this document. Each of the above HTTP REST services follows the following URL format.
 
 ```
 /hyper-core/mysql/[database]/[table]/[operation]
@@ -162,6 +164,49 @@ xhr.onreadystatechange = function() {
   }
 };
 xhr.send();
+```
+
+### Creating your own extension methods
+
+Often times the above 4 basic CRUD operations simply won't cut it for you. Maybe you want to perform a join on
+multiple tables for instance? Or you want to invoke a stored procedure? For such times, there
+is the `x` method. The `x` method doesn't take a table name as the second parameter. Instead it requires
+a unique name, to your own extension method, which you'll need to supply as a Hyperlambda file, inside
+of the _"/common/documents/private/hyper-core/mysql/x/"_ folder. If you have a file called for instance
+_"foo.hl"_ inside the previously mentioned folder, you can invoke this extension method using a URL resembling
+the following.
+
+```
+/hyper-core/mysql/todo/foo/x
+```
+
+This file will be evaluated with all the relevant information from your HTTP request, having been automatically
+decorated for you. Below is an example of how your file invocation might be decorated.
+
+```
+method:POST
+params
+  some-url-encoded-parameter:foo
+query
+  some-query-parameter:bar
+```
+
+This allows you to easily reference any parts of the HTTP request, and its decoration, as you see fit.
+Below is an example of a file that executes a `count` SQL on your `items` table,
+parametrised with a query parameter, filtering the `description` of the records it should count.
+
+```
+p5.mysql.scalar:select * from items where description like @description
+  @description:x:/../*/query/*/description?value
+return:x:/@p5.mysql.scalar?value
+```
+
+If you invoke the extension method above, with something resembling the following 
+URL `/hyper-core/mysql/todo/foo/x?description=bar` - The above 
+will return JSON resembling the following to your client.
+
+```json
+{"result":`2`}
 ```
 
 ## Authentication

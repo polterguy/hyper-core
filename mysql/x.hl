@@ -1,0 +1,124 @@
+/*
+ * File responsible for invoking our extension methods.
+ *
+ * This will retrieve the HTTP method, all body parameters, if any,
+ * in addition to all query parameters, and pass it in as the following
+ * to your extension method.
+ *
+ * - [method] - GET, POST, DELETE or PUT.
+ * - [params] - Key/value collection of all parameters found in the body of the request.
+ * - [query] - Key/value collection of all QUERY parameters given by client.
+ *
+ * Everything returned from extension method, will be echoed to client as JSON.
+ * If nothing is returned, an empty JSON object "{}" will be returned.
+ *
+ * Inside of your extension method, you can assume that the database has already been opened,
+ * but no transactions have been associated with it. If you'd like to use database transactions,
+ * you can accomplish that with [p5.mysql.transaction.begin], at which point you'll need to wrap
+ * your [p5.mysql.xxx] invocations inside of the transaction, and explicitly invoke [p5.mysql.transaction.commit]
+ * at the end of your lambda, since the default behaviour of transactions in P5 is to roll them back,
+ * unless explicitly committed.
+ */
+
+
+/*
+ * Sanity checking arguments.
+ */
+micro.lambda.contract.min:x:/..
+  table:string
+
+
+/*
+ * Sanity checking that extension method actually exists.
+ */
+if
+  fetch:x:/0/0?value
+    file-exists:/common/documents/private/hyper-core/mysql/x/{0}.hl
+      :x:/../*/table?value
+  not
+  p5.web.response.set-status-code:404
+  p5.web.echo:Oops, that method doesn't exist for this submodule.
+  return
+
+
+/*
+ * Making sure we pass in all parameters, and the HTTP method for the request.
+ */
+p5.web.request.get-method
+eval-x:x:/+/*
+.args
+  method:x:/@p5.web.request.get-method?value
+  query
+  params
+p5.web.post.list
+p5.web.post.get:x:/@p5.web.post.list/*?name
+add:x:/@.args/*/params
+  src:x:/@p5.web.post.get/*
+p5.web.query.list
+p5.web.query.get:x:/@p5.web.query.list/*?name
+add:x:/@.args/*/query
+  src:x:/@p5.web.query.get/*
+
+
+/*
+ * Evaluating extension method, now decorated with request parameters.
+ */
+add:x:/../*/micro.evaluate.file
+  src:x:/@.args/*
+micro.evaluate.file:/common/documents/private/hyper-core/mysql/x/{0}.hl
+  :x:/../*/table?value
+
+
+/*
+ * Making sure we accurately set the "Content-Type" of our HTTP response, before we echo our
+ * JSON results back to caller.
+ */
+p5.web.header.set:Content-Type
+  src:application/json
+
+
+/*
+ * Checking if the above evaluation of our extension method returned a simple value,
+ * at which point we return it to client as such, making sure we support multiple lines,
+ * and escaping any backticks (`) in the result.
+ */
+if:x:/@micro.evaluate.file?value
+  replace:x:/@micro.evaluate.file?value
+    src:`
+    dest:\`
+  p5.web.echo:@"{{""result"":`{0}`}}"
+    :x:/@replace?value
+  return
+
+
+/*
+ * Checking if the above evaluation of our extension method returned something that
+ * (probably) was the results of a [p5.mysql.select] invocation, at which point we make sure
+ * we return it as an "array" to client.
+ */
+if:x:/@micro.evaluate.file/0?name
+  =:row
+  set:x:/@micro.evaluate.file/*?name
+    src:
+
+
+/*
+ * Checking if the above evaluation of our extension method returned nothing, at
+ * which point we return an empty JSON array to client, and return early.
+ */
+if:x:/@micro.evaluate.file/*
+  not
+  p5.web.echo:[]
+  return
+
+
+/*
+ * Transforming results of above extension method evaluation to client.
+ */
+lambda2json:x:/@micro.evaluate.file/*
+
+
+/*
+ * Returning JSON to caller.
+ */
+p5.web.echo:x:/@lambda2json?value

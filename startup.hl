@@ -1,6 +1,7 @@
+
 /*
  * Startup file for module, basically creates all Active Events necessary
- * to wire up Hyper Core.
+ * to wire up Hyper Core, and creates a folder for storing extension methods.
  */
 split:x:/..?name
   =:/
@@ -11,3 +12,16 @@ eval-x:x:/+/*
 create-event:p5.io.unroll-path.@HYPER-CORE
   return:/{0}
     :x:/@join?value
+
+
+/*
+ * Creates our folder for storing extension methods to the "x" submodule for our MySQL module,
+ * unless it exists from before.
+ */
+if
+  fetch:x:/0/0?value
+    folder-exists:/common/documents/private/hyper-core/
+  not
+  create-folder:/common/documents/private/hyper-core/
+  create-folder:/common/documents/private/hyper-core/mysql/
+  create-folder:/common/documents/private/hyper-core/mysql/x/
