@@ -22,11 +22,15 @@ split:x:/@split/0?name
  */
 if:x:/@split/0/-?name
   =:login
-  micro.evaluate.file:@HYPER-CORE/login/evaluate.hl
+  micro.evaluate.file:@HYPER-CORE/authentication/login.hl
   return
 else-if:x:/@split/0/-?name
   =:logout
-  micro.evaluate.file:@HYPER-CORE/logout/evaluate.hl
+  micro.evaluate.file:@HYPER-CORE/authentication/logout.hl
+  return
+else-if:x:/@split/0/-?name
+  =:whoami
+  micro.evaluate.file:@HYPER-CORE/authentication/whoami.hl
   return
 
 

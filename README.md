@@ -188,7 +188,7 @@ var password = 'your_password';
 xhr.send('username=' + encodeURIComponent (username) + '&password=' + encodeURIComponent (password);
 ```
 
-If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. Example
+If you wish to logout, you can issue a `DELETE` HTTP request towards its _"logout"_ counterpart. An example
 can be found beneath.
 
 ```
@@ -203,7 +203,18 @@ xhr.onreadystatechange = function() {
 xhr.send();
 ```
 
-## Authorisation objects
+### [whoami], figuring out you're status
+
+Since the default authentication of Phosphorus Five allows a client to persist his logged in status in a cookie on disc,
+it is sometimes necessary to query towards the back end, to find out the authentication status of the client. This
+can be done by issuing an HTTP `GET` request towards the `whoami` module. This will return the username and the role
+of the client. An example can be found below.
+
+```
+/hyper-core/whoami
+```
+
+### Authorisation objects
 
 Hyper Core builds on top of the extendible [p5.auth project](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth).
 Each operation, database, and table within your database, get its own unique URL.
