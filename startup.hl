@@ -25,3 +25,14 @@ if
   create-folder:/common/documents/private/hyper-core/
   create-folder:/common/documents/private/hyper-core/mysql/
   create-folder:/common/documents/private/hyper-core/mysql/x/
+
+
+
+
+
+/*
+ * Creates version Active Event.
+ */
+create-event:hyper-core.version
+
+  return:decimal:6.1
