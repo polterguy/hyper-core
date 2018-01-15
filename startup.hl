@@ -1,38 +1,22 @@
+/*
+ * Startup file.
+ *
+ * Creates "path" event and evaluates all files in "/startup/" folder for module.
+ */
+
 
 /*
- * Startup file for module, basically creates all Active Events necessary
- * to wire up Hyper Core, and creates a folder for storing extension methods.
+ * Creates our "path" Active Event for module.
  */
-split:x:/..?name
-  =:/
-set:x:/@split/0/-
-join:x:/@split/*?name
-  sep:/
+micro.path.get-folder:x:/..?name
+trim-right:x:/@micro.path.get-folder?value
+  chars:/
 eval-x:x:/+/*
 create-event:p5.io.unroll-path.@HYPER-CORE
-  return:/{0}
-    :x:/@join?value
+  return:x:/@trim-right?value
 
 
 /*
- * Creates our folder for storing extension methods to the "x" submodule for our MySQL module,
- * unless it exists from before.
+ * Evaluating all other startup files.
  */
-if
-  fetch:x:/0/0?value
-    folder-exists:/common/documents/private/hyper-core/
-  not
-  create-folder:/common/documents/private/hyper-core/
-  create-folder:/common/documents/private/hyper-core/mysql/
-  create-folder:/common/documents/private/hyper-core/mysql/x/
-
-
-
-
-
-/*
- * Creates version Active Event.
- */
-create-event:hyper-core.version
-
-  return:decimal:6.1
+micro.evaluate.folder:@HYPER-CORE/startup/

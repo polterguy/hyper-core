@@ -1,0 +1,12 @@
+
+/*
+ * Creates our folders for storing common extension methods to the "x" submodule.
+ * Unless it exists from before.
+ */
+if
+  fetch:x:/0/0?value
+    folder-exists:/common/documents/private/hyper-core/
+  not
+  create-folder:/common/documents/private/hyper-core/
+  create-folder:/common/documents/private/hyper-core/mysql/
+  create-folder:/common/documents/private/hyper-core/mysql/x/
