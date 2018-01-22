@@ -3,4 +3,4 @@
  */
 create-event:hyper-core.version
 
-  return:decimal:6.2
+  return:decimal:7.0
