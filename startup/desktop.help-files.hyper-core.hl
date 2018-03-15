@@ -1,0 +1,7 @@
+
+/*
+ * Help file Active Event sink.
+ */
+create-event:desktop.help-files.hyper-core
+
+  return:@HYPER-CORE/help-files/Hyper Core/
