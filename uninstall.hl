@@ -4,3 +4,4 @@
 delete-event:p5.io.unroll-path.@HYPER-CORE
 vocabulary:~hyper-core.
 delete-event:x:/-/*?value
+delete-event:desktop.help-files.hyper-core
