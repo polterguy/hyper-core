@@ -1,9 +1,9 @@
 ## Security and authentication
 
-Hyper Core indirectly contains highly secure and flexible authentication features to login and logout a user, towards 
-the [p5.auth](https://github.com/polterguy/phosphorusfive/tree/master/plugins/extras/p5.auth) authentication/authorization
-module in Phosphorus Five. This allows you to easily authenticate your users towards
-the user and role based _"auth"_ system in Phosphorus Five. The main URL for this module is `auth`.
+Hyper Core indirectly contains highly secure and flexible authentication features to login and logout a user,
+towards the p5.auth authentication/authorization plugin in Phosphorus Five. This allows you to easily
+authenticate your users towards the user and role based _"auth"_ system in Phosphorus Five. The main URL
+for this module in Hyper Core is `/hyper-core/auth`.
 
 ### The authentication system's internals
 
@@ -15,7 +15,7 @@ automatically take care of handling these cookies for you. This also makes the a
 since these cookies by default are being transferred such that the JavaScript runtime in the browser, doesn't even 
 have access to them. The server can also easily be configured such that it doesn't serve these cookies,
 without an SSL connection from a client, to further prevent a _"man in the middle"_, picking up your credentials,
-and performing a _"session highjacking"_.
+preventing _"session highjacking"_.
 
 However, for other types of clients, it requires that you are able to store the cookies returned
 from the server, and re-transmit them upon consecutive requests, as a _"user ticket"_. All in all though,

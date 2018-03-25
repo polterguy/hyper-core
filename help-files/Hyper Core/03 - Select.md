@@ -57,5 +57,5 @@ would resemble the following.
 ```
 
 The above URL would fetch only items containing both the text _"john"_ in its firstname, **AND** the value of _"hansen"_
-in its surname. More complex queries, such as join operations, and richer SQL queries, can be constructed using
+in its surname. More complex queries, such as join operations, and richer SQL queries, can be constructed by using
 the extensibility features of the MySQL module. Which we will have a look at later.

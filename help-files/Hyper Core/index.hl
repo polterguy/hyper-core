@@ -1,12 +1,23 @@
-﻿/*
+/*
  * This is our main "landing page" for our Hyper Core help files.
  */
 h2
   innerValue:Hyper Core
 
+img
+  style:"margin-left:1rem; float:right;max-width: 25%;"
+  src:"https://phosphorusfive.files.wordpress.com/2018/03/earth_layers_model.png"
+
 p
-  innerValue:@"Hyper Core is an HTTP REST based ORM library for MySQL and more. These parts of the documentation explains how you can
-use Hyper Core in your own applications. Parts of this documentation requires basic understanding of Hyperlambda."
+  innerValue:@"Hyper Core is a generic HTTP REST backend. It provides pre-fabricated sinks to interact with MySQL,
+but there is nothing preventing you from using any database you want with it, or using it for other
+things than accessing a database. Parts of this documentation requires basic understanding of Hyperlambda."
+
+p
+  innerValue:@"With Hyper Core you can completely ditch the ideas of <em>'Managed Ajax'</em> from Phosphorus Five,
+and entirely choose your own front end - Such as e.g. AngularJS or ReactJS to build your front end. This (might)
+provide a more scalable way for you to create your web apps, and also allows you to more easily create
+JSON web services."
 
 
 /*

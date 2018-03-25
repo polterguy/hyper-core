@@ -5,7 +5,7 @@ multiple tables for instance? Or you want to add more complex conditions than th
 you need to insert into multiple tables during one invocation, wrapping your SQLs in a database transaction? For such 
 times, there is the `x` method. The `x` method doesn't take a table name as its second parameter. Instead it requires
 the name, to your extension method, which you'll need to supply as a Hyperlambda file, inside
-of your _"/common/documents/private/hyper-core/x/"_ folder. If you have a file called for instance
+of the `/common/documents/private/hyper-core/x/` folder. If you have a file called for instance
 _"foo.hl"_ inside of the previously mentioned folder, you can invoke this extension method using a URL resembling
 the following.
 
@@ -13,7 +13,7 @@ the following.
 /hyper-core/mysql/todo/foo/x
 ```
 
-The above URL will evaluate your _"/common/documents/private/hyper-core/x/foo.hl"_ file.
+The above URL will evaluate your `/common/documents/private/hyper-core/x/foo.hl` file.
 This file will be evaluated with all the relevant information from your HTTP request, having been automatically
 decorated for you. Notice, as your file is evaluated, the `todo` database will already be the open and active
 database connection, but no transactions will have been associated with it. Below is an example of how your 
