@@ -1,6 +1,14 @@
 /*
  * Uninstalls module.
  */
+
+
+
+
+
+/*
+ * Deleting all relevant Active Events, and that's it.
+ */
 delete-event:p5.io.unroll-path.@HYPER-CORE
 vocabulary:~hyper-core.
 delete-event:x:/-/*?value
