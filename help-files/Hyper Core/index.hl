@@ -5,7 +5,7 @@ h2
   innerValue:Hyper Core
 
 img
-  style:"margin-left:1rem; float:right;max-width: 25%;"
+  class:desktop-help-icon-image
   src:"https://phosphorusfive.files.wordpress.com/2018/03/earth_layers_model.png"
 
 p
