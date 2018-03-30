@@ -1,6 +1,6 @@
 # Hyper Core
 
-Hyper Core is a generic HTTP REST based backend. It features automatic integration with
+Hyper Core is a generic HTTP REST based backend for Phosphorus Five. It features automatic integration with
 MySQL, allowing you to declare HTTP REST requests, which evaluates SQL on your server -
 In addition to a generic Hyperlambda based endpoint, allowing you to evaluate some
 arbitrary Hyperlambda on your server.
