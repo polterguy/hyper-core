@@ -1,4 +1,4 @@
-## A generic HTTP REST backend
+## Introduction to Hyper Core
 
 Hyper Core is a generic HTTP REST backend that allows you to evaluate server side Hyperlambda,
 as a consequence of invoking some HTTP REST request. Hyper Core is mostly for developers who already knows
