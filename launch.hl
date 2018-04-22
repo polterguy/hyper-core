@@ -1,6 +1,10 @@
 /*
- * Main URL resolver for Hyper Core.
- *
+ * Main URL resolver for Hyper Core. __Notice__, Hyper Core doesn't really have a _"launch"_ file,
+ * since it has no GUI - However, this file is here exclusively to resolve HTTP REST URLs when
+ * the backend is being invoked by some frontend.
+ */
+
+/*
  * First we remove any query parameters from the given URL.
  */
 split:x:/../*/url?value

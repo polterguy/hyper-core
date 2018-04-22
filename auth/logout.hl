@@ -1,7 +1,8 @@
 /*
  * Logs out a user.
  *
- * Expects the current request being an HTTP GET request.
+ * Expects the current request being an HTTP GET request. Will destroy the authentication cookie
+ * previously created during a login invocation.
  */
 
 

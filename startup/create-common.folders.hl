@@ -1,6 +1,5 @@
-
 /*
- * Creates our folders for storing common extension methods to the "x" submodule.
+ * Creates our folders for storing common extension methods to the _"x"_ submodule -
  * Unless it exists from before.
  */
 if

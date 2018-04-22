@@ -2,23 +2,23 @@
  * File responsible for selecting items from our database.
  * Expects [database] and [table] as arguments.
  *
- * It also expects the HTTP method to be of type 'GET'.
+ * It also expects the HTTP method to be of type GET.
  *
- * Any optional HTTP GET QUERY parameters, will be used to refine the results 
- * of your select query.
+ * Any optional HTTP GET QUERY parameters, will be used to refine the results
+ * of your select query somehow.
  *
  * Any '[order-by]' and '[order-dir]' QUERY parameters, will order your results accordingly.
  * Any '[limit]' and '[offset]' QUERY parameters, will become a limit and offset
  * parameter to your select SQL.
  *
- * All other HTTP GET QUERY parameters becomes a part of the additional "where" clause,
+ * All other HTTP GET QUERY parameters becomes a part of the additional _"where"_ clause,
  * with their names being the column name, and their value expected to be in the form of
- * "operand:value", where operand can be e.g. "like" or "more-than", "equal", "not-equal" etc, 
- * and value can be e.g. "%foo%" or "2018-01-01T13:34".
+ * `operand:value`, where operand can be e.g. `like` or `more-than`, `equal`, `not-equal` etc,
+ * and value can be e.g. `%foo%` or `2018-01-01T13:34`.
  *
  * Obviously, this file will throw an exception, if you create erronous SQLs.
- * It does no validation of your SQL, except of course guarding against SQL insertion attacks,
- * but leaves it up to you to ensure you create SQL statements, which are legal according to your
+ * It does no validation of your SQL, except of course guarding against SQL insertion attacks -
+ * But leaves it up to you to ensure you create SQL statements, which are legal according to your
  * database schema.
  */
 

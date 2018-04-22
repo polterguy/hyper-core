@@ -1,5 +1,6 @@
 /*
- * Help file Active Event sink.
+ * Creates our help file Active Event sink, which returns the main root folder for Hyper IDE's
+ * help files to caller.
  */
 create-event:desktop.help-files.08-hyper-core
 

@@ -1,14 +1,15 @@
 /*
- * File responsible for performing "delete" on one or more record in some specific MySQL database table.
+ * File responsible for performing _"delete"_ on one or more record(s) in some
+ * specific MySQL database/table.
  *
  * Requires you to use the HTTP DELETE verb.
  *
  * Pass in any HTTP parameters you wish, which will parametrise the delete SQL accordingly.
- * E.g. "id=5, 6, 7" to delete items with id "5", "6" and "7".
+ * E.g. "id=5, 6, 7" to delete items with id of "5", "6" and "7".
  *
  * Obviously, this file will throw an exception, if you create erronous SQLs.
- * It does no validation of your SQL, except of course guarding against SQL insertion attacks,
- * but leaves it up to you to ensure you create SQL statements, which are legal according to your
+ * It does no validation of your SQL, except of course guarding against SQL injection attacks -
+ * But leaves it up to you to ensure you create SQL statements, which are legal according to your
  * database schema.
  */
 

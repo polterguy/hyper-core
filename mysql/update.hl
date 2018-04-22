@@ -1,7 +1,7 @@
 /*
  * File responsible for performing updates to some specific MySQL database.
  *
- * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
+ * Notice, contrary to our _"select"_ HTTP REST invocation, which simply requires a simple GET HTTP request,
  * this one will require the caller to use a POST HTTP request.
  */
 

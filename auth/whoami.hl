@@ -1,6 +1,6 @@
-
 /*
- * Returns the status of the client bacsk to client as JSON.
+ * Returns whether or not the client has been logged in or not back to
+ * the client as JSON.
  */
 
 

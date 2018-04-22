@@ -1,8 +1,9 @@
 /*
- * Logs in a user.
+ * HTTP REST request URL handler for logging in a user.
  *
- * Expects the current request being an HTTP POST request, and a username and password
- * parameter.
+ * Expects the current request being an HTTP POST request, and username and password
+ * given as a URL encoded parameters. Will create a cookie, and return to
+ * client, which you somehow need to forward in your consecutive requests.
  */
 
 

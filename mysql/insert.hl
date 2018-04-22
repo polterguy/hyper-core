@@ -1,15 +1,15 @@
 /*
- * File responsible for performing inserts to some specific MySQL database table.
+ * File responsible for performing inserts to some specific MySQL database/table.
  *
- * Notice, contrary to our "select" HTTP REST invocation, which simply requires a simple GET HTTP request,
+ * Notice, contrary to our _"select"_ HTTP REST invocation, which simply requires a simple GET HTTP request,
  * this one will require the caller to use a PUT HTTP request.
  *
  * All HTTP parameters will inserted with their names expected to be the column name,
- * and their values being tha value you wish to insert into the specific column.
+ * and their values being the value you wish to insert into the specific column.
  *
  * Obviously, this file will throw an exception, if you create erronous SQLs.
- * It does no validation of your SQL, except of course guarding against SQL insertion attacks,
- * but leaves it up to you to ensure you create SQL statements, which are legal according to your
+ * This file does no validation of your SQL, except of course guarding against SQL injection attacks -
+ * But leaves it up to you to ensure you create SQL statements, which are legal according to your
  * database schema.
  */
 
