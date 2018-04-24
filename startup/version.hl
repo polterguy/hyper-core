@@ -1,5 +1,10 @@
+
 /*
- * Creates our version Active Event.
+ * Creates our version Active Event for the Hyper Core module.
+ */
+
+/*
+ * This event returns the version number of the Hyper Core module.
  */
 create-event:hyper-core.version
 
