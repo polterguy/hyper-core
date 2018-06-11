@@ -70,7 +70,7 @@ if:x:/@split/1?name
  * Then we verify that user has access to the URL he tries to resolve.
  */
 if
-  p5.auth.has-access-to-path:bool:false
+  p5.auth.has-access:bool:false
     filter:p5.hyper-core
     path:x:/../*/split/[0,1]/0?name
   not
